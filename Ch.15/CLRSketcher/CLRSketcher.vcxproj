@@ -11,23 +11,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{D4D80A49-A1A9-4B91-93B6-0F48BF33065D}</ProjectGuid>
-    <RootNamespace>Sketcher</RootNamespace>
-    <Keyword>MFCProj</Keyword>
+    <ProjectGuid>{5AAF1956-F55F-438A-9207-927533D2547B}</ProjectGuid>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <Keyword>ManagedCProj</Keyword>
+    <RootNamespace>CLRSketcher</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
+    <CLRSupport>Pure</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CLRSupport>Pure</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -47,93 +47,79 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+      <EntryPointSymbol>main</EntryPointSymbol>
     </Link>
-    <Midl>
-      <MkTypLibCompatible>false</MkTypLibCompatible>
-      <ValidateAllParameters>true</ValidateAllParameters>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </Midl>
-    <ResourceCompile>
-      <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+      <EntryPointSymbol>main</EntryPointSymbol>
     </Link>
-    <Midl>
-      <MkTypLibCompatible>false</MkTypLibCompatible>
-      <ValidateAllParameters>true</ValidateAllParameters>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </Midl>
-    <ResourceCompile>
-      <Culture>0x0409</Culture>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.ico" />
+    <None Include="bitmap1.bmp" />
+    <None Include="bitmap2.bmp" />
+    <None Include="black.bmp" />
+    <None Include="blue.bmp" />
+    <None Include="circle.bmp" />
+    <None Include="curve.bmp" />
+    <None Include="green.bmp" />
+    <None Include="line.bmp" />
     <None Include="ReadMe.txt" />
-    <None Include="res\Sketcher.ico" />
-    <None Include="res\Sketcher.rc2" />
-    <None Include="res\SketcherDoc.ico" />
-    <None Include="res\Toolbar.bmp" />
-    <None Include="res\Toolbar256.bmp" />
-    <None Include="Sketcher.reg" />
-    <None Include="UserImages.bmp" />
+    <None Include="rectangle.bmp" />
+    <None Include="red.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ChildFrm.h" />
-    <ClInclude Include="MainFrm.h" />
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="Sketcher.h" />
-    <ClInclude Include="SketcherConstants.h" />
-    <ClInclude Include="SketcherDoc.h" />
-    <ClInclude Include="SketcherView.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="ChildFrm.cpp" />
-    <ClCompile Include="MainFrm.cpp" />
-    <ClCompile Include="Sketcher.cpp" />
-    <ClCompile Include="SketcherDoc.cpp" />
-    <ClCompile Include="SketcherView.cpp" />
+    <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="CLRSketcher.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Sketcher.rc" />
+    <ClInclude Include="Form1.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="app.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form1.resX">
+      <DependentUpon>Form1.h</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-  <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties RESOURCE_FILE="Sketcher.rc" />
-    </VisualStudio>
-  </ProjectExtensions>
 </Project>

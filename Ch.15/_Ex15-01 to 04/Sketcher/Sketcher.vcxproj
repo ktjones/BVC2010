@@ -108,6 +108,7 @@
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Sketcher.h" />
+    <ClInclude Include="SketcherConstants.h" />
     <ClInclude Include="SketcherDoc.h" />
     <ClInclude Include="SketcherView.h" />
     <ClInclude Include="stdafx.h" />

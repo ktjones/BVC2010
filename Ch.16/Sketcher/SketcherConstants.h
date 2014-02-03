@@ -1,10 +1,10 @@
 //Definitions of constants
 #pragma once
 
-#include <WinGDI.h>
+#include <Windows.h>
 
 // Element type definitions
-enum ElementType{LINE, RECTANGLE, CIRCLE, CURVE, ELLIPSE};
+enum ElementType{LINE, RECTANGLE, CIRCLE, CURVE};
 
 // Color values for drawing
 const COLORREF BLACK = RGB(0,0,0);

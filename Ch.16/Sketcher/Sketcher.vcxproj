@@ -105,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChildFrm.h" />
+    <ClInclude Include="Elements.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Sketcher.h" />
@@ -116,6 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChildFrm.cpp" />
+    <ClCompile Include="Elements.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="Sketcher.cpp" />
     <ClCompile Include="SketcherDoc.cpp" />

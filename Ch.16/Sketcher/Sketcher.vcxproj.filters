@@ -64,6 +64,9 @@
     <ClInclude Include="SketcherConstants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Elements.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sketcher.cpp">
@@ -82,6 +85,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SketcherView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Elements.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

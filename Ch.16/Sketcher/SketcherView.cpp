@@ -28,11 +28,14 @@ BEGIN_MESSAGE_MAP(CSketcherView, CView)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CSketcherView::OnFilePrintPreview)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
+	ON_WM_LBUTTONUP()
+	ON_WM_LBUTTONDOWN()
+	ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
 
 // CSketcherView construction/destruction
 
-CSketcherView::CSketcherView()
+CSketcherView::CSketcherView(): m_FirstPoint(CPoint(0,0)), m_SecondPoint(CPoint(0,0)), m_pTempElement(nullptr)
 {
 	// TODO: add construction code here
 
@@ -56,11 +59,10 @@ void CSketcherView::OnDraw(CDC* pDC)
 {
 	CSketcherDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
-	if (!pDoc)
-		return;
-
-	// TODO: add draw code for native data here
-
+	if(!pDoc)
+	return;
+	
+	// TODO: add extra initialization before printing
 	
 }
 
@@ -127,3 +129,38 @@ CSketcherDoc* CSketcherView::GetDocument() const // non-debug version is inline
 
 
 // CSketcherView message handlers
+
+
+void CSketcherView::OnLButtonUp(UINT nFlags, CPoint point)
+{
+	// TODO: Add your message handler code here and/or call default
+
+	CView::OnLButtonUp(nFlags, point);
+}
+
+
+void CSketcherView::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	
+	m_FirstPoint = point; // Record the cursor position
+
+}
+
+
+void CSketcherView::OnMouseMove(UINT nFlags, CPoint point)
+{
+	if(nFlags & MK_LBUTTON) // Verify the left button is down
+	{
+		
+		m_SecondPoint = point; // Save the current cursor position
+		// Test for a previous temporary element
+		{
+			// We get to here if there was a previous mouse move
+			// so add code to delete the old element
+		}
+
+		// Add code to create new element
+		// and cause it to be drawn
+
+	}
+}

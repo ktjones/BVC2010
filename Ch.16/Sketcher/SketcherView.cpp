@@ -133,9 +133,18 @@ CSketcherDoc* CSketcherView::GetDocument() const // non-debug version is inline
 
 void CSketcherView::OnLButtonUp(UINT nFlags, CPoint point)
 {
-	// TODO: Add your message handler code here and/or call default
+	
+	// Make sure there is an element
+	if(m_pTempElement)
+	{
+		// Call a document class function to store the element
+		// pointed to by m_pTempElement in the document object
+	
+		delete m_pTempElement; // This code is temporary
+		m_pTempElement = nullptr; // Reset the element pointer
 
-	CView::OnLButtonUp(nFlags, point);
+	}
+
 }
 
 
@@ -149,18 +158,67 @@ void CSketcherView::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CSketcherView::OnMouseMove(UINT nFlags, CPoint point)
 {
-	if(nFlags & MK_LBUTTON) // Verify the left button is down
+	// Define a Device Context object for the view
+	CClientDC aDC(this); // DC is for this view
+
+	if(nFlags & MK_LBUTTON)
 	{
-		
 		m_SecondPoint = point; // Save the current cursor position
-		// Test for a previous temporary element
+
+		if(m_pTempElement)
 		{
-			// We get to here if there was a previous mouse move
-			// so add code to delete the old element
+			if(CURVE == GetDocument()->GetElementType()) // Is it a curve?
+			{ // We are drawing a curve so add a segment to the existing curve
+				static_cast<CCurve*>(m_pTempElement)->AddSegment(m_SecondPoint);
+				m_pTempElement->Draw(&aDC); // Now draw it
+				return; // We are done
+			}
+
+			// If we get to here it’s not a curve so
+			// redraw the old element so it disappears from the view
+			aDC.SetROP2(R2_NOTXORPEN); // Set the drawing mode
+			m_pTempElement->Draw(&aDC); // Redraw the old element
+			delete m_pTempElement; // Delete the old element
+			m_pTempElement = nullptr; // Reset the pointer
 		}
 
-		// Add code to create new element
-		// and cause it to be drawn
-
+		// Create a temporary element of the type and color that
+		// is recorded in the document object, and draw it
+		m_pTempElement = CreateElement(); // Create a new element
+		m_pTempElement->Draw(&aDC); // Draw the element
 	}
+}
+
+
+CElement* CSketcherView::CreateElement(void) const
+{
+
+	// Get a pointer to the document for this view
+	CSketcherDoc* pDoc = GetDocument();
+
+	ASSERT_VALID(pDoc); // Verify the pointer is good
+	
+	// Now select the element using the type stored in the document
+	switch(pDoc->GetElementType())
+	{
+		case RECTANGLE:
+			return new CRectangle(m_FirstPoint, m_SecondPoint,pDoc->GetElementColor());
+
+		case CIRCLE:
+			return new CCircle(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor());
+
+		case CURVE:
+			return new CCurve(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor());
+
+		case LINE:
+			return new CLine(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor());
+
+		default:
+			// Something's gone wrong
+			AfxMessageBox(_T("Bad Element code"), MB_OK);
+			AfxAbort();
+		
+		return nullptr;
+	}
+
 }

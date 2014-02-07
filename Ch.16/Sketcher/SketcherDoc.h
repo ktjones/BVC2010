@@ -17,7 +17,9 @@ class CSketcherDoc : public CDocument
 
 	// Operations
 	public:
-
+		unsigned int GetElementType() const	{ return m_Element; }	// Get the element type
+		COLORREF GetElementColor() const { return m_Color;}			// Get the element color
+		
 	// Overrides
 	public:
 		virtual BOOL OnNewDocument();
@@ -69,4 +71,6 @@ class CSketcherDoc : public CDocument
 		afx_msg void OnUpdateElementRectangle(CCmdUI *pCmdUI);
 		afx_msg void OnUpdateElementCircle(CCmdUI *pCmdUI);
 		afx_msg void OnUpdateElementCurve(CCmdUI *pCmdUI);
+
+
 };

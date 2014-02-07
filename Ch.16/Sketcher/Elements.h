@@ -1,4 +1,6 @@
 #pragma once
+#include "atltypes.h"
+#include <vector>
 
 // CElement command target
 
@@ -11,6 +13,7 @@ class CElement : public CObject
 	protected:
 		int m_PenWidth;		// Pen Width
 		COLORREF m_Color;	// Color of an element
+		CRect m_EnclosingRect;	// Rectangle enclosing an element
 
 	public:
 		virtual ~CElement();
@@ -19,7 +22,7 @@ class CElement : public CObject
 
 	protected:
 		CElement();			// Here to prevent it from being called
-
+	
 };
 
 class CLine : public CElement
@@ -42,22 +45,45 @@ class CLine : public CElement
 class CRectangle : public CElement
 {
 	public:
-		CRectangle(void);
 		virtual ~CRectangle(void);
+		virtual void Draw(CDC* pDC); // Function to display a rectangle
+
+		// Constructor for a rectangle object
+		CRectangle(const CPoint& start, const CPoint& end, COLORREF aColor);
+
+	protected:
+		CRectangle(void);	// Default constructor - should not be used
+
 };
 
 class CCircle : public CElement
 {
 	public:
-		CCircle(void);
 		virtual ~CCircle(void);
+		virtual void Draw(CDC* pDC); // Function to display a rectangle
+
+		// Constructor for a rectangle object
+		CCircle(const CPoint& start, const CPoint& end, COLORREF aColor);
+
+	protected:
+		CCircle(void);
+
+
 };
 
 class CCurve : public CElement
 {
 	public:
-		CCurve(void);
 		virtual ~CCurve(void);
+		virtual void Draw(CDC* pDC); // Function to display a curve
+
+		// Constructor for a curve object
+		CCurve(const CPoint& first, const CPoint& second, COLORREF aColor);
+		void AddSegment(const CPoint& point); // Add a segment to the curve
+
+	protected:
+		std::vector<CPoint> m_Points; // Points defi ning the curve
+		CCurve(void);
 };
 
 

@@ -106,7 +106,6 @@ void CSketcherView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
 #endif
 }
 
-
 // CSketcherView diagnostics
 
 #ifdef _DEBUG
@@ -127,13 +126,16 @@ CSketcherDoc* CSketcherView::GetDocument() const // non-debug version is inline
 }
 #endif //_DEBUG
 
-
 // CSketcherView message handlers
-
 
 void CSketcherView::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	
+	if(this == GetCapture())
+	{
+		ReleaseCapture(); // Stop capturing mouse messages
+	}
+
 	// Make sure there is an element
 	if(m_pTempElement)
 	{
@@ -147,21 +149,20 @@ void CSketcherView::OnLButtonUp(UINT nFlags, CPoint point)
 
 }
 
-
 void CSketcherView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	
 	m_FirstPoint = point; // Record the cursor position
+	SetCapture(); // Capture subsequent mouse messages
 
 }
-
 
 void CSketcherView::OnMouseMove(UINT nFlags, CPoint point)
 {
 	// Define a Device Context object for the view
 	CClientDC aDC(this); // DC is for this view
 
-	if(nFlags & MK_LBUTTON)
+	if((nFlags & MK_LBUTTON) && (this == GetCapture()))
 	{
 		m_SecondPoint = point; // Save the current cursor position
 
@@ -188,7 +189,6 @@ void CSketcherView::OnMouseMove(UINT nFlags, CPoint point)
 		m_pTempElement->Draw(&aDC); // Draw the element
 	}
 }
-
 
 CElement* CSketcherView::CreateElement(void) const
 {

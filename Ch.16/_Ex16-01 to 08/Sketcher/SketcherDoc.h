@@ -19,6 +19,7 @@ class CSketcherDoc : public CDocument
 	public:
 		unsigned int GetElementType() const	{ return m_Element; }	// Get the element type
 		COLORREF GetElementColor() const { return m_Color;}			// Get the element color
+		int GetElementPenStyle() const { return m_PenStyle;}		// Get the element pen style
 		
 	// Overrides
 	public:
@@ -61,6 +62,9 @@ class CSketcherDoc : public CDocument
 		ElementType m_Element;
 		// Current Color Type
 		COLORREF m_Color;
+		// Current Pen Style
+		int m_PenStyle;
+
 
 	public:
 		afx_msg void OnUpdateColorBlack(CCmdUI *pCmdUI);
@@ -71,8 +75,16 @@ class CSketcherDoc : public CDocument
 		afx_msg void OnUpdateElementRectangle(CCmdUI *pCmdUI);
 		afx_msg void OnUpdateElementCircle(CCmdUI *pCmdUI);
 		afx_msg void OnUpdateElementCurve(CCmdUI *pCmdUI);
-
-
 		afx_msg void OnElementEllipse();
 		afx_msg void OnUpdateElementEllipse(CCmdUI *pCmdUI);
+		afx_msg void OnPenstyleSolid();
+		afx_msg void OnPenstyleDashed();
+		afx_msg void OnPenstyleDotted();
+		afx_msg void OnPenstyleDashDotted();
+		afx_msg void OnPenstyleDashDotDotted();
+		afx_msg void OnUpdatePenstyleSolid(CCmdUI *pCmdUI);
+		afx_msg void OnUpdatePenstyleDashed(CCmdUI *pCmdUI);
+		afx_msg void OnUpdatePenstyleDotted(CCmdUI *pCmdUI);
+		afx_msg void OnUpdatePenstyleDashDotted(CCmdUI *pCmdUI);
+		afx_msg void OnUpdatePenstyleDashDotDotted(CCmdUI *pCmdUI);
 };

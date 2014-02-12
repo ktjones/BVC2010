@@ -12,6 +12,7 @@ class CElement : public CObject
 {
 	protected:
 		int m_PenWidth;		// Pen Width
+		int m_LineStyle;	// Line Style
 		COLORREF m_Color;	// Color of an element
 		CRect m_EnclosingRect;	// Rectangle enclosing an element
 
@@ -32,7 +33,7 @@ class CLine : public CElement
 		virtual void Draw(CDC* pDC);
 	
 		// Constructor for a line object
-		CLine(const CPoint& start, const CPoint& end, COLORREF aColor);
+		CLine(const CPoint& start, const CPoint& end, COLORREF aColor, int aPenStyle);
 
 	protected:
 		CPoint m_StartPoint; // Start point of line
@@ -49,7 +50,7 @@ class CRectangle : public CElement
 		virtual void Draw(CDC* pDC); // Function to display a rectangle
 
 		// Constructor for a rectangle object
-		CRectangle(const CPoint& start, const CPoint& end, COLORREF aColor);
+		CRectangle(const CPoint& start, const CPoint& end, COLORREF aColor, int aPenStyle);
 
 	protected:
 		CRectangle(void);	// Default constructor - should not be used
@@ -63,7 +64,7 @@ class CCircle : public CElement
 		virtual void Draw(CDC* pDC); // Function to display a rectangle
 
 		// Constructor for a rectangle object
-		CCircle(const CPoint& start, const CPoint& end, COLORREF aColor);
+		CCircle(const CPoint& start, const CPoint& end, COLORREF aColor, int aPenStyle);
 
 	protected:
 		CCircle(void);
@@ -78,7 +79,7 @@ class CCurve : public CElement
 		virtual void Draw(CDC* pDC); // Function to display a curve
 
 		// Constructor for a curve object
-		CCurve(const CPoint& first, const CPoint& second, COLORREF aColor);
+		CCurve(const CPoint& first, const CPoint& second, COLORREF aColor, int aPenStyle);
 		void AddSegment(const CPoint& point); // Add a segment to the curve
 
 	protected:
@@ -94,7 +95,7 @@ class CEllipse : public CElement
 		virtual void Draw(CDC* pDC); // Function to display a rectangle
 
 		// Constructor for a rectangle object
-		CEllipse(const CPoint& start, const CPoint& end, COLORREF aColor);
+		CEllipse(const CPoint& center, const CPoint& end, COLORREF aColor, int aPenStyle);
 
 	protected:
 		CEllipse(void);	// Default constructor - should not be used

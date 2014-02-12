@@ -202,16 +202,19 @@ CElement* CSketcherView::CreateElement(void) const
 	switch(pDoc->GetElementType())
 	{
 		case RECTANGLE:
-			return new CRectangle(m_FirstPoint, m_SecondPoint,pDoc->GetElementColor());
+			return new CRectangle(m_FirstPoint, m_SecondPoint,pDoc->GetElementColor(),pDoc->GetElementPenStyle());
 
 		case CIRCLE:
-			return new CCircle(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor());
+			return new CCircle(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle());
 
 		case CURVE:
-			return new CCurve(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor());
+			return new CCurve(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle());
 
 		case LINE:
-			return new CLine(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor());
+			return new CLine(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle());
+		
+		case ELLIPSE:
+			return new CEllipse(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle());
 
 		default:
 			// Something's gone wrong

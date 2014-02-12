@@ -38,6 +38,8 @@ BEGIN_MESSAGE_MAP(CSketcherDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_ELEMENT_RECTANGLE, &CSketcherDoc::OnUpdateElementRectangle)
 	ON_UPDATE_COMMAND_UI(ID_ELEMENT_CIRCLE, &CSketcherDoc::OnUpdateElementCircle)
 	ON_UPDATE_COMMAND_UI(ID_ELEMENT_CURVE, &CSketcherDoc::OnUpdateElementCurve)
+	ON_COMMAND(ID_ELEMENT_ELLIPSE, &CSketcherDoc::OnElementEllipse)
+	ON_UPDATE_COMMAND_UI(ID_ELEMENT_ELLIPSE, &CSketcherDoc::OnUpdateElementEllipse)
 END_MESSAGE_MAP()
 
 
@@ -287,5 +289,22 @@ void CSketcherDoc::OnUpdateElementCurve(CCmdUI *pCmdUI)
 	// Set menu item Checked if the current element is curve
 	pCmdUI->SetCheck(m_Element==CURVE);
 
+
+}
+
+
+void CSketcherDoc::OnElementEllipse()
+{
+	
+	m_Element = ELLIPSE;  // Set the drawing element to ellipse
+
+}
+
+
+void CSketcherDoc::OnUpdateElementEllipse(CCmdUI *pCmdUI)
+{
+	
+	// Set menu item Checked if the current element is curve
+	pCmdUI->SetCheck(m_Element==ELLIPSE);
 
 }

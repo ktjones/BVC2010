@@ -245,3 +245,61 @@ void CCurve::AddSegment(const CPoint& point)
 	m_EnclosingRect=CRect(min(point.x,m_EnclosingRect.left),min(point.y,m_EnclosingRect.top),max(point.x,m_EnclosingRect.right),max(point.y,m_EnclosingRect.bottom));
 
 }
+
+
+// CEllipse
+
+CEllipse::CEllipse(void)
+{
+}
+
+CEllipse::CEllipse(const CPoint& start, const CPoint& end, COLORREF aColor)
+{
+	
+	// First calculate the radius
+	// We use floating point because that is required by
+	// the library function (in cmath) for calculating a square root.
+	long radius = static_cast <long>(sqrt(static_cast <double>((end.x-start.x)*(end.x-start.x)+(end.y-start.y)*(end.y-start.y))));
+
+	// Now calculate the rectangle enclosing
+	// the circle assuming the MM_TEXT mapping mode
+	m_EnclosingRect = CRect(start.x-radius, start.y-radius,start.x+radius, start.y+radius);
+	m_EnclosingRect.NormalizeRect(); // Normalize-in case it's not MM_TEXT
+	m_Color = aColor; // Set the color for the circle
+	m_PenWidth = 1; // Set pen width to 1
+
+}
+
+CEllipse::~CEllipse(void)
+{
+}
+
+// Draw a circle
+void CEllipse::Draw(CDC* pDC)
+{
+	
+	// Create a pen for this object and
+	// initialize it to the object color and line width of m_PenWidth
+	CPen aPen;
+	
+	if(!aPen.CreatePen(PS_SOLID, m_PenWidth, m_Color))
+	{
+		// Pen creation failed
+		AfxMessageBox(_T("Pen creation failed drawing a circle"), MB_OK);
+		AfxAbort();
+	}
+	
+	// Select the pen
+	CPen* pOldPen = pDC-> SelectObject(& aPen); 
+	
+	// Select a null brush
+	CBrush* pOldBrush = (CBrush*)pDC->SelectStockObject(NULL_BRUSH);
+	
+	// Now draw the circle
+	pDC->Ellipse(m_EnclosingRect);
+	pDC->SelectObject(pOldPen); // Restore the old pen
+	pDC->SelectObject(pOldBrush); // Restore the old brush
+
+}
+
+

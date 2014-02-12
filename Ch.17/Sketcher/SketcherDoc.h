@@ -81,4 +81,5 @@ class CSketcherDoc : public CDocument
 		afx_msg void OnUpdateElementCurve(CCmdUI *pCmdUI);
 
 
+		
 };

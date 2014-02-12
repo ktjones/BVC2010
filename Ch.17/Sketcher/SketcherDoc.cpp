@@ -298,3 +298,6 @@ void CSketcherDoc::OnUpdateElementCurve(CCmdUI *pCmdUI)
 
 
 }
+
+
+

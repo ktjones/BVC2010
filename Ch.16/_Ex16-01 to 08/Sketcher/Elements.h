@@ -86,4 +86,17 @@ class CCurve : public CElement
 		CCurve(void);
 };
 
+class CEllipse : public CElement
+{
 
+	public:
+		virtual ~CEllipse(void);
+		virtual void Draw(CDC* pDC); // Function to display a rectangle
+
+		// Constructor for a rectangle object
+		CEllipse(const CPoint& start, const CPoint& end, COLORREF aColor);
+
+	protected:
+		CEllipse(void);	// Default constructor - should not be used
+
+};

@@ -4,7 +4,7 @@
 #include <Windows.h>
 
 // Element type definitions
-enum ElementType{LINE, RECTANGLE, CIRCLE, CURVE};
+enum ElementType{LINE, RECTANGLE, CIRCLE, CURVE, ELLIPSE};
 
 // Color values for drawing
 const COLORREF BLACK = RGB(0,0,0);

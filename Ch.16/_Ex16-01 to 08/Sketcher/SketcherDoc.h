@@ -73,4 +73,6 @@ class CSketcherDoc : public CDocument
 		afx_msg void OnUpdateElementCurve(CCmdUI *pCmdUI);
 
 
+		afx_msg void OnElementEllipse();
+		afx_msg void OnUpdateElementEllipse(CCmdUI *pCmdUI);
 };

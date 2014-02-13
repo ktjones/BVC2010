@@ -38,12 +38,24 @@ BEGIN_MESSAGE_MAP(CSketcherDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_ELEMENT_RECTANGLE, &CSketcherDoc::OnUpdateElementRectangle)
 	ON_UPDATE_COMMAND_UI(ID_ELEMENT_CIRCLE, &CSketcherDoc::OnUpdateElementCircle)
 	ON_UPDATE_COMMAND_UI(ID_ELEMENT_CURVE, &CSketcherDoc::OnUpdateElementCurve)
+	ON_COMMAND(ID_ELEMENT_ELLIPSE, &CSketcherDoc::OnElementEllipse)
+	ON_UPDATE_COMMAND_UI(ID_ELEMENT_ELLIPSE, &CSketcherDoc::OnUpdateElementEllipse)
+	ON_COMMAND(ID_PENSTYLE_SOLID, &CSketcherDoc::OnPenstyleSolid)
+	ON_COMMAND(ID_PENSTYLE_DASHED, &CSketcherDoc::OnPenstyleDashed)
+	ON_COMMAND(ID_PENSTYLE_DOTTED, &CSketcherDoc::OnPenstyleDotted)
+	ON_COMMAND(ID_PENSTYLE_DASH_DOTTED, &CSketcherDoc::OnPenstyleDashDotted)
+	ON_COMMAND(ID_PENSTYLE_DASH_DOT_DOTTED, &CSketcherDoc::OnPenstyleDashDotDotted)
+	ON_UPDATE_COMMAND_UI(ID_PENSTYLE_SOLID, &CSketcherDoc::OnUpdatePenstyleSolid)
+	ON_UPDATE_COMMAND_UI(ID_PENSTYLE_DASHED, &CSketcherDoc::OnUpdatePenstyleDashed)
+	ON_UPDATE_COMMAND_UI(ID_PENSTYLE_DOTTED, &CSketcherDoc::OnUpdatePenstyleDotted)
+	ON_UPDATE_COMMAND_UI(ID_PENSTYLE_DASH_DOTTED, &CSketcherDoc::OnUpdatePenstyleDashDotted)
+	ON_UPDATE_COMMAND_UI(ID_PENSTYLE_DASH_DOT_DOTTED, &CSketcherDoc::OnUpdatePenstyleDashDotDotted)
 END_MESSAGE_MAP()
 
 
 // CSketcherDoc construction/destruction
 
-CSketcherDoc::CSketcherDoc() : m_Element(LINE), m_Color(BLACK)
+CSketcherDoc::CSketcherDoc() : m_Element(LINE), m_Color(BLACK), m_PenStyle(PS_SOLID)
 {
 	// TODO: add one-time construction code here
 
@@ -57,7 +69,6 @@ CSketcherDoc::~CSketcherDoc()
 	{
 		delete *iter;
 	}
-
 	m_ElementList.clear(); // Finally delete all pointers
 
 }
@@ -72,8 +83,6 @@ BOOL CSketcherDoc::OnNewDocument()
 
 	return TRUE;
 }
-
-
 
 
 // CSketcherDoc serialization
@@ -300,4 +309,94 @@ void CSketcherDoc::OnUpdateElementCurve(CCmdUI *pCmdUI)
 }
 
 
+void CSketcherDoc::OnElementEllipse()
+{
+	
+	m_Element = ELLIPSE;  // Set the drawing element to ellipse
 
+}
+
+
+void CSketcherDoc::OnUpdateElementEllipse(CCmdUI *pCmdUI)
+{
+	
+	// Set menu item Checked if the current element is curve
+	pCmdUI->SetCheck(m_Element==ELLIPSE);
+
+}
+
+
+void CSketcherDoc::OnPenstyleSolid()
+{
+	
+	m_PenStyle = PS_SOLID;
+
+}
+
+void CSketcherDoc::OnPenstyleDashed()
+{
+	
+	m_PenStyle = PS_DASH;
+
+}
+
+void CSketcherDoc::OnPenstyleDotted()
+{
+	
+	m_PenStyle = PS_DOT;
+
+}
+
+void CSketcherDoc::OnPenstyleDashDotted()
+{
+	
+	m_PenStyle = PS_DASHDOT;
+
+}
+
+void CSketcherDoc::OnPenstyleDashDotDotted()
+{
+	
+	m_PenStyle = PS_DASHDOTDOT;
+
+}
+
+void CSketcherDoc::OnUpdatePenstyleSolid(CCmdUI *pCmdUI)
+{
+	
+	// Set menu item Checked if the current line style is solid
+	pCmdUI->SetCheck(m_PenStyle==PS_SOLID);
+
+}
+
+void CSketcherDoc::OnUpdatePenstyleDashed(CCmdUI *pCmdUI)
+{
+	
+	// Set menu item Checked if the current line style is dash
+	pCmdUI->SetCheck(m_PenStyle==PS_DASH);
+
+}
+
+void CSketcherDoc::OnUpdatePenstyleDotted(CCmdUI *pCmdUI)
+{
+	
+	// Set menu item Checked if the current line style is dashdot
+	pCmdUI->SetCheck(m_PenStyle==PS_DOT);
+
+}
+
+void CSketcherDoc::OnUpdatePenstyleDashDotted(CCmdUI *pCmdUI)
+{
+	
+	// Set menu item Checked if the current line style is dashdot
+	pCmdUI->SetCheck(m_PenStyle==PS_DASHDOT);
+
+}
+
+void CSketcherDoc::OnUpdatePenstyleDashDotDotted(CCmdUI *pCmdUI)
+{
+	
+	// Set menu item Checked if the current line style is dashdot
+	pCmdUI->SetCheck(m_PenStyle==PS_DASHDOTDOT);
+
+}

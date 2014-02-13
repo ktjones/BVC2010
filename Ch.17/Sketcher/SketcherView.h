@@ -7,7 +7,7 @@
 #include "Elements.h"
 
 
-class CSketcherView : public CView
+class CSketcherView : public CScrollView
 {
 	protected: // create from serialization only
 		CSketcherView();
@@ -53,9 +53,17 @@ class CSketcherView : public CView
 		afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 		afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	protected:
+		// Points
 		CPoint m_FirstPoint;
 		CPoint m_SecondPoint;
+		// Pointer to temporary element
 		CElement* m_pTempElement;
+		// Pointer to an object selected by the mouse
+		CElement* m_pSelected;
+
+		virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
+public:
+	virtual void OnInitialUpdate();
 };
 
 #ifndef _DEBUG  // debug version in SketcherView.cpp

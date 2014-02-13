@@ -4,10 +4,8 @@
 
 
 #pragma once
-
 #include <list>
 #include "Elements.h"
-#include "SketcherConstants.h"
 
 class CSketcherDoc : public CDocument
 {
@@ -20,11 +18,12 @@ class CSketcherDoc : public CDocument
 
 	// Operations
 	public:
-		unsigned int GetElementType() const	{ return m_Element; }								// Get the element type
-		COLORREF GetElementColor() const { return m_Color;}										// Get the element color
-		void AddElement(CElement* pElement)	{ m_ElementList.push_back(pElement); }				// Add an element to the list
-		std::list<CElement*>::const_iterator begin() const	{ return m_ElementList.begin(); }	// Get list begin iterator
-		std::list<CElement*>::const_iterator end() const	{ return m_ElementList.end(); }		// Get list end iterator
+		unsigned int GetElementType() const	{ return m_Element; }	// Get the element type
+		COLORREF GetElementColor() const { return m_Color;}			// Get the element color
+		int GetElementPenStyle() const { return m_PenStyle;}		// Get the element pen style
+		void AddElement(CElement* pElement) { m_ElementList.push_back(pElement); } // Add an element to the list
+		std::list<CElement*>::const_iterator begin() const { return m_ElementList.begin(); } // Get list begin iterator
+		std::list<CElement*>::const_iterator end() const { return m_ElementList.end(); } // Get list end iterator
 		
 	// Overrides
 	public:
@@ -67,8 +66,10 @@ class CSketcherDoc : public CDocument
 		ElementType m_Element;
 		// Current Color Type
 		COLORREF m_Color;
-		// Container for Elements
-		std::list<CElement*> m_ElementList;
+		// Current Pen Style
+		int m_PenStyle;
+		// Container to keep track of elements
+		std::list<CElement*> m_ElementList; // List of elements in the sketch
 
 	public:
 		afx_msg void OnUpdateColorBlack(CCmdUI *pCmdUI);
@@ -79,7 +80,16 @@ class CSketcherDoc : public CDocument
 		afx_msg void OnUpdateElementRectangle(CCmdUI *pCmdUI);
 		afx_msg void OnUpdateElementCircle(CCmdUI *pCmdUI);
 		afx_msg void OnUpdateElementCurve(CCmdUI *pCmdUI);
-
-
-		
+		afx_msg void OnElementEllipse();
+		afx_msg void OnUpdateElementEllipse(CCmdUI *pCmdUI);
+		afx_msg void OnPenstyleSolid();
+		afx_msg void OnPenstyleDashed();
+		afx_msg void OnPenstyleDotted();
+		afx_msg void OnPenstyleDashDotted();
+		afx_msg void OnPenstyleDashDotDotted();
+		afx_msg void OnUpdatePenstyleSolid(CCmdUI *pCmdUI);
+		afx_msg void OnUpdatePenstyleDashed(CCmdUI *pCmdUI);
+		afx_msg void OnUpdatePenstyleDotted(CCmdUI *pCmdUI);
+		afx_msg void OnUpdatePenstyleDashDotted(CCmdUI *pCmdUI);
+		afx_msg void OnUpdatePenstyleDashDotDotted(CCmdUI *pCmdUI);
 };

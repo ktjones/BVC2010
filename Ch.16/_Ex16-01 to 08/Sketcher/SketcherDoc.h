@@ -2,9 +2,9 @@
 // SketcherDoc.h : interface of the CSketcherDoc class
 //
 
-
 #pragma once
-
+#include <list>
+#include "Elements.h"
 
 class CSketcherDoc : public CDocument
 {
@@ -20,7 +20,10 @@ class CSketcherDoc : public CDocument
 		unsigned int GetElementType() const	{ return m_Element; }	// Get the element type
 		COLORREF GetElementColor() const { return m_Color;}			// Get the element color
 		int GetElementPenStyle() const { return m_PenStyle;}		// Get the element pen style
-		
+		void AddElement(CElement* pElement) { m_ElementList.push_back(pElement); }	// Add an element to the list
+		std::list<CElement*>::const_iterator begin() const	{ return m_ElementList.begin(); } // Get list begin iterator
+		std::list<CElement*>::const_iterator end() const { return m_ElementList.end(); } // Get list end iterator
+
 	// Overrides
 	public:
 		virtual BOOL OnNewDocument();
@@ -64,8 +67,11 @@ class CSketcherDoc : public CDocument
 		COLORREF m_Color;
 		// Current Pen Style
 		int m_PenStyle;
+		// Document List
+		std::list<CElement*> m_ElementList;
 
 
+		
 	public:
 		afx_msg void OnUpdateColorBlack(CCmdUI *pCmdUI);
 		afx_msg void OnUpdateColorGreen(CCmdUI *pCmdUI);

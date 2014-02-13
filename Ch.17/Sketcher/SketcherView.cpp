@@ -19,9 +19,9 @@
 
 // CSketcherView
 
-IMPLEMENT_DYNCREATE(CSketcherView, CView)
+IMPLEMENT_DYNCREATE(CSketcherView, CScrollView)
 
-BEGIN_MESSAGE_MAP(CSketcherView, CView)
+BEGIN_MESSAGE_MAP(CSketcherView, CScrollView)
 	// Standard printing commands
 	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
@@ -35,7 +35,7 @@ END_MESSAGE_MAP()
 
 // CSketcherView construction/destruction
 
-CSketcherView::CSketcherView(): m_FirstPoint(CPoint(0,0)), m_SecondPoint(CPoint(0,0)), m_pTempElement(nullptr)
+CSketcherView::CSketcherView(): m_FirstPoint(CPoint(0,0)), m_SecondPoint(CPoint(0,0)), m_pTempElement(nullptr), m_pSelected(nullptr)
 {
 	// TODO: add construction code here
 
@@ -63,21 +63,16 @@ void CSketcherView::OnDraw(CDC* pDC)
 	return;
 	
 	CElement* pElement(nullptr);
-
 	for(auto iter = pDoc->begin() ; iter != pDoc->end() ; ++iter)
 	{
 		pElement = *iter;
 		if(pDC->RectVisible(pElement->GetBoundRect())) // If the element is visible
-		{
-			pElement->Draw(pDC); // ...draw it
-		}
+		pElement->Draw(pDC); // ...draw it
 	}
 	
 }
 
-
 // CSketcherView printing
-
 
 void CSketcherView::OnFilePrintPreview()
 {
@@ -108,11 +103,24 @@ void CSketcherView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 	OnContextMenu(this, point);
 }
 
-void CSketcherView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
+void CSketcherView::OnContextMenu(CWnd* pWnd, CPoint point)
 {
+
 #ifndef SHARED_HANDLERS
-	theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, TRUE);
+	
+	//theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, TRUE);
+	if(m_pSelected)
+	{
+		theApp.GetContextMenuManager()->ShowPopupMenu(IDR_ELEMENT_MENU,point.x, point.y, this);
+	}
+	else
+	{
+		theApp.GetContextMenuManager()->ShowPopupMenu(IDR_NOELEMENT_MENU,point.x, point.y, this);
+	}
+
+
 #endif
+
 }
 
 // CSketcherView diagnostics
@@ -148,9 +156,11 @@ void CSketcherView::OnLButtonUp(UINT nFlags, CPoint point)
 	// If there is an element, add it to the document
 	if(m_pTempElement)
 	{
-		
+		// Call a document class function to store the element
+		// pointed to by m_pTempElement in the document object
 		GetDocument()->AddElement(m_pTempElement);
-		InvalidateRect(nullptr); // Redraw the current window
+		
+		GetDocument()->UpdateAllViews(nullptr, 0, m_pTempElement); // Tell the views
 		m_pTempElement = nullptr; // Reset the element pointer
 
 	}
@@ -160,6 +170,9 @@ void CSketcherView::OnLButtonUp(UINT nFlags, CPoint point)
 void CSketcherView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	
+	CClientDC aDC(this); // Create a device context
+	OnPrepareDC(&aDC); // Get origin adjusted
+	aDC.DPtoLP(&point); // Convert point to logical coordinatesm_FirstPoint = point; // Record the cursor position
 	m_FirstPoint = point; // Record the cursor position
 	SetCapture(); // Capture subsequent mouse messages
 
@@ -169,6 +182,8 @@ void CSketcherView::OnMouseMove(UINT nFlags, CPoint point)
 {
 	// Define a Device Context object for the view
 	CClientDC aDC(this); // DC is for this view
+	OnPrepareDC(&aDC); // Get origin adjusted
+	aDC.DPtoLP(&point); // Convert point to logical coordinates
 
 	if((nFlags & MK_LBUTTON) && (this == GetCapture()))
 	{
@@ -210,16 +225,19 @@ CElement* CSketcherView::CreateElement(void) const
 	switch(pDoc->GetElementType())
 	{
 		case RECTANGLE:
-			return new CRectangle(m_FirstPoint, m_SecondPoint,pDoc->GetElementColor());
+			return new CRectangle(m_FirstPoint, m_SecondPoint,pDoc->GetElementColor(),pDoc->GetElementPenStyle());
 
 		case CIRCLE:
-			return new CCircle(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor());
+			return new CCircle(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle());
 
 		case CURVE:
-			return new CCurve(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor());
+			return new CCurve(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle());
 
 		case LINE:
-			return new CLine(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor());
+			return new CLine(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle());
+		
+		case ELLIPSE:
+			return new CEllipse(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle());
 
 		default:
 			// Something's gone wrong
@@ -228,5 +246,37 @@ CElement* CSketcherView::CreateElement(void) const
 		
 		return nullptr;
 	}
+
+}
+
+void CSketcherView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
+{
+	// Invalidate the area corresponding to the element pointed to
+	// if there is one, otherwise invalidate the whole client area
+	if(pHint)
+	{
+		CClientDC aDC(this); // Create a device context
+		OnPrepareDC(&aDC); // Get origin adjusted
+		
+		// Get the enclosing rectangle and convert to client coordinates
+		CRect aRect = static_cast<CElement*>(pHint)->GetBoundRect();
+		aDC.LPtoDP(aRect);
+		InvalidateRect(aRect); // Get the area redrawn
+	}
+	else
+	{
+		InvalidateRect(nullptr);
+	}
+}
+
+void CSketcherView::OnInitialUpdate()
+{
+	CScrollView::OnInitialUpdate();
+
+	// Define document size
+	CSize DocSize(3000,3000);
+
+	// Set mapping mode and document size
+	SetScrollSizes(MM_LOENGLISH, DocSize);
 
 }

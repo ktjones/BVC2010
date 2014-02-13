@@ -205,11 +205,14 @@ void CSketcherApp::OnAppAbout()
 
 void CSketcherApp::PreLoadState()
 {
+	/*
 	BOOL bNameValid;
 	CString strName;
 	bNameValid = strName.LoadString(IDS_EDIT_MENU);
 	ASSERT(bNameValid);
-	GetContextMenuManager()->AddMenu(strName, IDR_POPUP_EDIT);
+	*/
+	GetContextMenuManager()->AddMenu(_T("Element menu"), IDR_ELEMENT_MENU);
+	GetContextMenuManager()->AddMenu(_T("No element menu"), IDR_NOELEMENT_MENU);
 }
 
 void CSketcherApp::LoadCustomState()

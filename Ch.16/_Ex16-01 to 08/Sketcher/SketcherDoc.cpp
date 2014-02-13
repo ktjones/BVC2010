@@ -63,6 +63,15 @@ CSketcherDoc::CSketcherDoc() : m_Element(LINE), m_Color(BLACK), m_PenStyle(PS_SO
 
 CSketcherDoc::~CSketcherDoc()
 {
+
+	// Delete the element pointed to by each list entry
+	for(auto iter = m_ElementList.begin() ; iter != m_ElementList.end() ; ++iter)
+	{
+		delete *iter;
+	}
+
+	m_ElementList.clear(); // Finally delete all pointers
+
 }
 
 BOOL CSketcherDoc::OnNewDocument()

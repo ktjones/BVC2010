@@ -62,7 +62,13 @@ void CSketcherView::OnDraw(CDC* pDC)
 	if(!pDoc)
 	return;
 	
-	// TODO: add extra initialization before printing
+	CElement* pElement(nullptr);
+	for(auto iter = pDoc->begin() ; iter != pDoc->end() ; ++iter)
+	{
+		pElement = *iter;
+		if(pDC->RectVisible(pElement->GetBoundRect())) // If the element is visible
+		pElement->Draw(pDC); // ...draw it
+	}
 	
 }
 
@@ -136,13 +142,14 @@ void CSketcherView::OnLButtonUp(UINT nFlags, CPoint point)
 		ReleaseCapture(); // Stop capturing mouse messages
 	}
 
-	// Make sure there is an element
+	// If there is an element, add it to the document
 	if(m_pTempElement)
 	{
+		
 		// Call a document class function to store the element
 		// pointed to by m_pTempElement in the document object
-	
-		delete m_pTempElement; // This code is temporary
+		GetDocument()->AddElement(m_pTempElement);
+		GetDocument()->UpdateAllViews(nullptr, 0, m_pTempElement); // Tell the views
 		m_pTempElement = nullptr; // Reset the element pointer
 
 	}

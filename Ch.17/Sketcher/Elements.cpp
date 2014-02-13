@@ -40,10 +40,11 @@ CLine::CLine(void)
 }
 
 // CLine class constructor
-CLine::CLine(const CPoint & start, const CPoint & end, COLORREF aColor): m_StartPoint(start), m_EndPoint(end)
+CLine::CLine(const CPoint & start, const CPoint & end, COLORREF aColor, int aPenStyle): m_StartPoint(start), m_EndPoint(end)
 {
 	
 	m_PenWidth = 1; // Set pen width
+	m_LineStyle = aPenStyle;
 	m_Color = aColor; // Set line color
 
 	// Defi ne the enclosing rectangle
@@ -64,7 +65,7 @@ void CLine::Draw(CDC* pDC)
 	// Create a pen for this object and
 	// initialize it to the object color and line width m_PenWidth
 	CPen aPen;
-	if(!aPen.CreatePen(PS_SOLID, m_PenWidth, m_Color))
+	if(!aPen.CreatePen(m_LineStyle, m_PenWidth, m_Color))
 	{
 		// Pen creation failed. Abort the program
 		AfxMessageBox(_T("Pen creation failed drawing a line"), MB_OK);
@@ -87,10 +88,11 @@ CRectangle::CRectangle(void)
 }
 
 // CRectangle class constructor
-CRectangle::CRectangle(const CPoint & start, const CPoint & end, COLORREF aColor)
+CRectangle::CRectangle(const CPoint & start, const CPoint & end, COLORREF aColor, int aPenStyle)
 {
 	
 	m_Color = aColor; // Set rectangle color
+	m_LineStyle = aPenStyle;
 	m_PenWidth = 1; // Set pen width
 	
 	// Define the enclosing rectangle
@@ -110,7 +112,7 @@ void CRectangle::Draw(CDC* pDC)
 	// Create a pen for this object and
 	// initialize it to the object color and line width of m_PenWidth
 	CPen aPen;
-	if(!aPen.CreatePen(PS_SOLID, m_PenWidth, m_Color))
+	if(!aPen.CreatePen(m_LineStyle, m_PenWidth, m_Color))
 	{
 		// Pen creation failed
 		AfxMessageBox(_T("Pen creation failed drawing a rectangle"), MB_OK);
@@ -136,7 +138,7 @@ CCircle::CCircle(void)
 {
 }
 
-CCircle::CCircle(const CPoint& start, const CPoint& end, COLORREF aColor)
+CCircle::CCircle(const CPoint& start, const CPoint& end, COLORREF aColor, int aPenStyle)
 {
 	
 	// First calculate the radius
@@ -150,6 +152,7 @@ CCircle::CCircle(const CPoint& start, const CPoint& end, COLORREF aColor)
 	m_EnclosingRect.NormalizeRect(); // Normalize-in case it's not MM_TEXT
 	m_Color = aColor; // Set the color for the circle
 	m_PenWidth = 1; // Set pen width to 1
+	m_LineStyle = aPenStyle;
 
 }
 
@@ -165,7 +168,7 @@ void CCircle::Draw(CDC* pDC)
 	// initialize it to the object color and line width of m_PenWidth
 	CPen aPen;
 	
-	if(!aPen.CreatePen(PS_SOLID, m_PenWidth, m_Color))
+	if(!aPen.CreatePen(m_LineStyle, m_PenWidth, m_Color))
 	{
 		// Pen creation failed
 		AfxMessageBox(_T("Pen creation failed drawing a circle"), MB_OK);
@@ -191,7 +194,7 @@ CCurve::CCurve(void)
 {
 }
 
-CCurve::CCurve(const CPoint& first, const CPoint& second, COLORREF aColor)
+CCurve::CCurve(const CPoint& first, const CPoint& second, COLORREF aColor, int aPenStyle)
 {
 
 	// Store the points
@@ -200,6 +203,7 @@ CCurve::CCurve(const CPoint& first, const CPoint& second, COLORREF aColor)
 	m_Color = aColor;
 	m_EnclosingRect = CRect(min(first.x, second.x), min(first.y, second.y),max(first.x, second.x), max(first.y, second.y));
 	m_PenWidth = 1;
+	m_LineStyle = aPenStyle;
 
 }
 
@@ -214,7 +218,7 @@ void CCurve::Draw(CDC* pDC)
 	// initialize it to the object color and line width of m_PenWidth
 	CPen aPen;
 	
-	if(!aPen.CreatePen(PS_SOLID, m_PenWidth, m_Color))
+	if(!aPen.CreatePen(m_LineStyle, m_PenWidth, m_Color))
 	{
 		// Pen creation failed
 		AfxMessageBox(_T("Pen creation failed drawing a curve"), MB_OK);
@@ -245,3 +249,66 @@ void CCurve::AddSegment(const CPoint& point)
 	m_EnclosingRect=CRect(min(point.x,m_EnclosingRect.left),min(point.y,m_EnclosingRect.top),max(point.x,m_EnclosingRect.right),max(point.y,m_EnclosingRect.bottom));
 
 }
+
+
+// CEllipse
+
+CEllipse::CEllipse(void)
+{
+}
+
+CEllipse::CEllipse(const CPoint& center, const CPoint& end, COLORREF aColor, int aPenStyle)
+{
+	
+	// First calculate the left rect coords (start)
+	// We use floating point because that is required by
+	// the library function (in cmath) for calculating a square root.
+	
+	CPoint start(center);
+	start.Offset(center.x-end.x,center.y-end.y);
+
+	// Now calculate the rectangle enclosing
+	// the circle assuming the MM_TEXT mapping mode
+	
+
+	m_EnclosingRect = CRect(start,end);
+	m_EnclosingRect.NormalizeRect(); // Normalize-in case it's not MM_TEXT
+	m_Color = aColor; // Set the color for the circle
+	m_PenWidth = 1; // Set pen width to 1
+	m_LineStyle = aPenStyle;
+
+}
+
+CEllipse::~CEllipse(void)
+{
+}
+
+// Draw a circle
+void CEllipse::Draw(CDC* pDC)
+{
+	
+	// Create a pen for this object and
+	// initialize it to the object color and line width of m_PenWidth
+	CPen aPen;
+	
+	if(!aPen.CreatePen(m_LineStyle, m_PenWidth, m_Color))
+	{
+		// Pen creation failed
+		AfxMessageBox(_T("Pen creation failed drawing a circle"), MB_OK);
+		AfxAbort();
+	}
+	
+	// Select the pen
+	CPen* pOldPen = pDC->SelectObject(& aPen); 
+	
+	// Select a null brush
+	CBrush* pOldBrush = (CBrush*)pDC->SelectStockObject(NULL_BRUSH);
+	
+	// Now draw the circle
+	pDC->Ellipse(m_EnclosingRect);
+	pDC->SelectObject(pOldPen); // Restore the old pen
+	pDC->SelectObject(pOldBrush); // Restore the old brush
+
+}
+
+

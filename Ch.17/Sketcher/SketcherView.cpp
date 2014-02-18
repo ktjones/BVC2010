@@ -31,11 +31,14 @@ BEGIN_MESSAGE_MAP(CSketcherView, CScrollView)
 	ON_WM_LBUTTONUP()
 	ON_WM_LBUTTONDOWN()
 	ON_WM_MOUSEMOVE()
+	ON_COMMAND(ID_ELEMENT_MOVE, &CSketcherView::OnElementMove)
+	ON_COMMAND(ID_ELEMENT_DELETE, &CSketcherView::OnElementDelete)
+	ON_WM_RBUTTONDOWN()
 END_MESSAGE_MAP()
 
 // CSketcherView construction/destruction
 
-CSketcherView::CSketcherView(): m_FirstPoint(CPoint(0,0)), m_SecondPoint(CPoint(0,0)), m_pTempElement(nullptr), m_pSelected(nullptr)
+CSketcherView::CSketcherView(): m_FirstPoint(CPoint(0,0)), m_SecondPoint(CPoint(0,0)), m_pTempElement(nullptr), m_pSelected(nullptr), m_MoveMode(false), m_CursorPos(CPoint(0,0)), m_FirstPos(CPoint(0,0))
 {
 	// TODO: add construction code here
 
@@ -67,7 +70,9 @@ void CSketcherView::OnDraw(CDC* pDC)
 	{
 		pElement = *iter;
 		if(pDC->RectVisible(pElement->GetBoundRect())) // If the element is visible
-		pElement->Draw(pDC); // ...draw it
+		{
+			pElement->Draw(pDC,m_pSelected); // ...draw it
+		}
 	}
 	
 }
@@ -99,6 +104,12 @@ void CSketcherView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 
 void CSketcherView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 {
+	if(m_MoveMode)
+	{
+		m_MoveMode = false;
+		return;
+	}
+	
 	ClientToScreen(&point);
 	OnContextMenu(this, point);
 }
@@ -173,6 +184,16 @@ void CSketcherView::OnLButtonDown(UINT nFlags, CPoint point)
 	CClientDC aDC(this); // Create a device context
 	OnPrepareDC(&aDC); // Get origin adjusted
 	aDC.DPtoLP(&point); // Convert point to logical coordinatesm_FirstPoint = point; // Record the cursor position
+	
+	if(m_MoveMode)
+	{
+		// In moving mode, so drop the element
+		m_MoveMode = false; // Kill move mode
+		m_pSelected = nullptr; // De-select the element
+		GetDocument()->UpdateAllViews(0); // Redraw all the views
+		return;
+	}
+	
 	m_FirstPoint = point; // Record the cursor position
 	SetCapture(); // Capture subsequent mouse messages
 
@@ -184,6 +205,14 @@ void CSketcherView::OnMouseMove(UINT nFlags, CPoint point)
 	CClientDC aDC(this); // DC is for this view
 	OnPrepareDC(&aDC); // Get origin adjusted
 	aDC.DPtoLP(&point); // Convert point to logical coordinates
+
+	// If we are in move mode, move the selected element and return
+	if(m_MoveMode)
+	{
+		MoveElement(aDC, point); // Move the element
+		return;
+	}
+
 
 	if((nFlags & MK_LBUTTON) && (this == GetCapture()))
 	{
@@ -210,6 +239,25 @@ void CSketcherView::OnMouseMove(UINT nFlags, CPoint point)
 		// is recorded in the document object, and draw it
 		m_pTempElement = CreateElement(); // Create a new element
 		m_pTempElement->Draw(&aDC); // Draw the element
+	}
+	else
+	{	
+		// We are not creating an element, so select an element
+		CSketcherDoc* pDoc=GetDocument(); // Get a pointer to the document
+		CElement* pOldSelected(m_pSelected);
+		m_pSelected = pDoc->FindElement(point); // Set selected element
+		if(m_pSelected != pOldSelected)
+		{
+			if(m_pSelected)
+			{
+				InvalidateRect(m_pSelected->GetBoundRect(), FALSE);
+			}
+			if(pOldSelected)
+			{
+				InvalidateRect(pOldSelected->GetBoundRect(), FALSE);
+			}
+			pDoc->UpdateAllViews(nullptr);
+		}
 	}
 }
 
@@ -279,4 +327,54 @@ void CSketcherView::OnInitialUpdate()
 	// Set mapping mode and document size
 	SetScrollSizes(MM_LOENGLISH, DocSize);
 
+}
+
+void CSketcherView::OnElementMove()
+{
+	CClientDC aDC(this);
+	OnPrepareDC(&aDC); // Set up the device context
+	GetCursorPos(&m_CursorPos); // Get cursor position in screen coords
+	ScreenToClient(&m_CursorPos); // Convert to client coords
+	aDC.DPtoLP(&m_CursorPos); // Convert to logical
+	m_FirstPos = m_CursorPos; // Remember fi rst position
+	m_MoveMode = true; // Start move mode
+}
+
+void CSketcherView::OnElementDelete()
+{
+	if(m_pSelected)
+	{
+		CSketcherDoc* pDoc = GetDocument();// Get the document pointer
+		pDoc->DeleteElement(m_pSelected); // Delete the element
+		pDoc->UpdateAllViews(nullptr); // Redraw all the views
+		m_pSelected = nullptr; // Reset selected element ptr
+	}
+}
+
+void CSketcherView::MoveElement(CClientDC & aDC, const CPoint & point)
+{
+	CSize distance = point - m_CursorPos; // Get move distance
+	m_CursorPos = point; // Set current point as 1st for
+	// next time
+	// If there is an element selected, move it
+	if(m_pSelected)
+	{
+		aDC.SetROP2(R2_NOTXORPEN);
+		m_pSelected-> Draw(&aDC, m_pSelected); // Draw the element to erase it
+		m_pSelected-> Move(distance); // Now move the element
+		m_pSelected-> Draw(&aDC, m_pSelected); // Draw the moved element
+	}
+}
+
+void CSketcherView::OnRButtonDown(UINT nFlags, CPoint point)
+{
+	if(m_MoveMode)
+	{
+		// In moving mode, so drop element back in original position
+		CClientDC aDC(this);
+		OnPrepareDC(&aDC); // Get origin adjusted
+		MoveElement(aDC, m_FirstPos); // Move element to original position
+		m_pSelected = nullptr; // De-select element
+		GetDocument()->UpdateAllViews(nullptr); // Redraw all the views
+	}
 }

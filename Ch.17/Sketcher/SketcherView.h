@@ -31,7 +31,7 @@ class CSketcherView : public CScrollView
 		virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
 		virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
 		virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
-
+		
 	// Implementation
 	public:
 		virtual ~CSketcherView();
@@ -60,10 +60,19 @@ class CSketcherView : public CScrollView
 		CElement* m_pTempElement;
 		// Pointer to an object selected by the mouse
 		CElement* m_pSelected;
+		// Items for the MOVE mode
+		bool m_MoveMode;	// Move element flag
+		CPoint m_CursorPos;	// Cursor position
+		CPoint m_FirstPos;	// Original position in a move
 
 		virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
+		void MoveElement(CClientDC & aDC, const CPoint & point); // Move an element
+
 public:
 	virtual void OnInitialUpdate();
+	afx_msg void OnElementMove();
+	afx_msg void OnElementDelete();
+	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 };
 
 #ifndef _DEBUG  // debug version in SketcherView.cpp

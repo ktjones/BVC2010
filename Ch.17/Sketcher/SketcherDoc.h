@@ -24,7 +24,9 @@ class CSketcherDoc : public CDocument
 		void AddElement(CElement* pElement) { m_ElementList.push_back(pElement); } // Add an element to the list
 		std::list<CElement*>::const_iterator begin() const { return m_ElementList.begin(); } // Get list begin iterator
 		std::list<CElement*>::const_iterator end() const { return m_ElementList.end(); } // Get list end iterator
-		
+		CElement* FindElement(const CPoint & point)const;		// Determine is object has been selected
+		void DeleteElement(CElement* pElement); // Delete an element
+
 	// Overrides
 	public:
 		virtual BOOL OnNewDocument();

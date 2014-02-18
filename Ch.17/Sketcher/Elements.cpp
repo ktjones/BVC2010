@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "Sketcher.h"
 #include "Elements.h"
+#include <algorithm>
 #include <cmath>
 
 
@@ -59,13 +60,13 @@ CLine::~CLine(void)
 }
 
 // Draw a CLine object
-void CLine::Draw(CDC* pDC)
+void CLine::Draw(CDC* pDC, CElement* pElement)
 {
 	
 	// Create a pen for this object and
 	// initialize it to the object color and line width m_PenWidth
 	CPen aPen;
-	if(!aPen.CreatePen(m_LineStyle, m_PenWidth, m_Color))
+	if(!aPen.CreatePen(m_LineStyle, m_PenWidth, this==pElement ? SELECT_COLOR : m_Color))
 	{
 		// Pen creation failed. Abort the program
 		AfxMessageBox(_T("Pen creation failed drawing a line"), MB_OK);
@@ -79,6 +80,13 @@ void CLine::Draw(CDC* pDC)
 	pDC->LineTo(m_EndPoint);
 	pDC->SelectObject(pOldPen); // Restore the old pen
 
+}
+
+void CLine::Move(const CSize & aSize)
+{
+	m_StartPoint += aSize; // Move the start point
+	m_EndPoint += aSize; // and the end point
+	m_EnclosingRect += aSize; // Move the enclosing rectangle
 }
 
 // CRectangle
@@ -106,13 +114,13 @@ CRectangle::~CRectangle(void)
 }
 
 // Draw a CRectangle object
-void CRectangle::Draw(CDC* pDC)
+void CRectangle::Draw(CDC* pDC, CElement* pElement)
 {
 	
 	// Create a pen for this object and
 	// initialize it to the object color and line width of m_PenWidth
 	CPen aPen;
-	if(!aPen.CreatePen(m_LineStyle, m_PenWidth, m_Color))
+	if(!aPen.CreatePen(m_LineStyle, m_PenWidth, this==pElement ? SELECT_COLOR : m_Color))
 	{
 		// Pen creation failed
 		AfxMessageBox(_T("Pen creation failed drawing a rectangle"), MB_OK);
@@ -130,6 +138,11 @@ void CRectangle::Draw(CDC* pDC)
 	pDC->SelectObject(pOldBrush); // Restore the old brush
 	pDC->SelectObject(pOldPen); // Restore the old pen
 
+}
+
+void CRectangle::Move(const CSize & aSize)
+{
+	m_EnclosingRect+= aSize; // Move the rectangle
 }
 
 // CCircle
@@ -161,14 +174,14 @@ CCircle::~CCircle(void)
 }
 
 // Draw a circle
-void CCircle::Draw(CDC* pDC)
+void CCircle::Draw(CDC* pDC, CElement* pElement)
 {
 	
 	// Create a pen for this object and
 	// initialize it to the object color and line width of m_PenWidth
 	CPen aPen;
 	
-	if(!aPen.CreatePen(m_LineStyle, m_PenWidth, m_Color))
+	if(!aPen.CreatePen(m_LineStyle, m_PenWidth, this==pElement ? SELECT_COLOR : m_Color))
 	{
 		// Pen creation failed
 		AfxMessageBox(_T("Pen creation failed drawing a circle"), MB_OK);
@@ -186,6 +199,11 @@ void CCircle::Draw(CDC* pDC)
 	pDC->SelectObject(pOldPen); // Restore the old pen
 	pDC->SelectObject(pOldBrush); // Restore the old brush
 
+}
+
+void CCircle::Move(const CSize & aSize)
+{
+	m_EnclosingRect+= aSize; // Move rectangle defining the circle
 }
 
 // Curve
@@ -212,13 +230,13 @@ CCurve::~CCurve(void)
 }
 
 // Draw a curve
-void CCurve::Draw(CDC* pDC)
+void CCurve::Draw(CDC* pDC, CElement* pElement)
 {
 	// Create a pen for this object and
 	// initialize it to the object color and line width of m_PenWidth
 	CPen aPen;
 	
-	if(!aPen.CreatePen(m_LineStyle, m_PenWidth, m_Color))
+	if(!aPen.CreatePen(m_LineStyle, m_PenWidth, this==pElement ? SELECT_COLOR : m_Color))
 	{
 		// Pen creation failed
 		AfxMessageBox(_T("Pen creation failed drawing a curve"), MB_OK);
@@ -239,6 +257,13 @@ void CCurve::Draw(CDC* pDC)
 	pDC->SelectObject(pOldPen); // Restore the old pen
 }
 
+void CCurve::Move(const CSize & aSize)
+{
+	m_EnclosingRect += aSize; // Move the rectangle
+	// Now move all the points
+	std::for_each(m_Points.begin(), m_Points.end(),[& aSize](CPoint& p){p+=aSize;});
+}
+
 // Add a segment to the curve
 void CCurve::AddSegment(const CPoint& point)
 {
@@ -249,7 +274,6 @@ void CCurve::AddSegment(const CPoint& point)
 	m_EnclosingRect=CRect(min(point.x,m_EnclosingRect.left),min(point.y,m_EnclosingRect.top),max(point.x,m_EnclosingRect.right),max(point.y,m_EnclosingRect.bottom));
 
 }
-
 
 // CEllipse
 
@@ -284,14 +308,14 @@ CEllipse::~CEllipse(void)
 }
 
 // Draw a circle
-void CEllipse::Draw(CDC* pDC)
+void CEllipse::Draw(CDC* pDC, CElement* pElement)
 {
 	
 	// Create a pen for this object and
 	// initialize it to the object color and line width of m_PenWidth
 	CPen aPen;
 	
-	if(!aPen.CreatePen(m_LineStyle, m_PenWidth, m_Color))
+	if(!aPen.CreatePen(m_LineStyle, m_PenWidth, this==pElement ? SELECT_COLOR : m_Color))
 	{
 		// Pen creation failed
 		AfxMessageBox(_T("Pen creation failed drawing a circle"), MB_OK);
@@ -311,4 +335,7 @@ void CEllipse::Draw(CDC* pDC)
 
 }
 
-
+void CEllipse::Move(const CSize & aSize)
+{
+	m_EnclosingRect+= aSize; // Move rectangle defining the circle
+}

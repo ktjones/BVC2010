@@ -170,14 +170,12 @@ void CSketcherDoc::Dump(CDumpContext& dc) const
 
 // CSketcherDoc commands
 
-
 void CSketcherDoc::OnColorBlack()
 {
 	
 	m_Color = BLACK;  // Set the drawing color to black
 
 }
-
 
 void CSketcherDoc::OnColorGreen()
 {
@@ -186,14 +184,12 @@ void CSketcherDoc::OnColorGreen()
 
 }
 
-
 void CSketcherDoc::OnColorRed()
 {
 		
 	m_Color = RED;  // Set the drawing color to red
 
 }
-
 
 void CSketcherDoc::OnColorBlue()
 {
@@ -202,14 +198,12 @@ void CSketcherDoc::OnColorBlue()
 
 }
 
-
 void CSketcherDoc::OnElementLine()
 {
 	
 	m_Element = LINE;  // Set the drawing element to Line
 
 }
-
 
 void CSketcherDoc::OnElementRectangle()
 {
@@ -218,7 +212,6 @@ void CSketcherDoc::OnElementRectangle()
 
 }
 
-
 void CSketcherDoc::OnElementCircle()
 {
 	
@@ -226,14 +219,12 @@ void CSketcherDoc::OnElementCircle()
 
 }
 
-
 void CSketcherDoc::OnElementCurve()
 {
 	
 	m_Element = CURVE;  // Set the drawing element to curve
 
 }
-
 
 void CSketcherDoc::OnUpdateColorBlack(CCmdUI *pCmdUI)
 {
@@ -243,7 +234,6 @@ void CSketcherDoc::OnUpdateColorBlack(CCmdUI *pCmdUI)
 
 }
 
-
 void CSketcherDoc::OnUpdateColorGreen(CCmdUI *pCmdUI)
 {
 	
@@ -251,7 +241,6 @@ void CSketcherDoc::OnUpdateColorGreen(CCmdUI *pCmdUI)
 	pCmdUI->SetCheck(m_Color==GREEN);
 
 }
-
 
 void CSketcherDoc::OnUpdateColorRed(CCmdUI *pCmdUI)
 {
@@ -261,7 +250,6 @@ void CSketcherDoc::OnUpdateColorRed(CCmdUI *pCmdUI)
 
 }
 
-
 void CSketcherDoc::OnUpdateColorBlue(CCmdUI *pCmdUI)
 {
 	
@@ -269,7 +257,6 @@ void CSketcherDoc::OnUpdateColorBlue(CCmdUI *pCmdUI)
 	pCmdUI->SetCheck(m_Color==BLUE);
 
 }
-
 
 void CSketcherDoc::OnUpdateElementLine(CCmdUI *pCmdUI)
 {
@@ -279,7 +266,6 @@ void CSketcherDoc::OnUpdateElementLine(CCmdUI *pCmdUI)
 
 }
 
-
 void CSketcherDoc::OnUpdateElementRectangle(CCmdUI *pCmdUI)
 {
 	
@@ -288,7 +274,6 @@ void CSketcherDoc::OnUpdateElementRectangle(CCmdUI *pCmdUI)
 
 }
 
-
 void CSketcherDoc::OnUpdateElementCircle(CCmdUI *pCmdUI)
 {
 	
@@ -296,7 +281,6 @@ void CSketcherDoc::OnUpdateElementCircle(CCmdUI *pCmdUI)
 	pCmdUI->SetCheck(m_Element==CIRCLE);
 
 }
-
 
 void CSketcherDoc::OnUpdateElementCurve(CCmdUI *pCmdUI)
 {
@@ -308,14 +292,12 @@ void CSketcherDoc::OnUpdateElementCurve(CCmdUI *pCmdUI)
 
 }
 
-
 void CSketcherDoc::OnElementEllipse()
 {
 	
 	m_Element = ELLIPSE;  // Set the drawing element to ellipse
 
 }
-
 
 void CSketcherDoc::OnUpdateElementEllipse(CCmdUI *pCmdUI)
 {
@@ -324,7 +306,6 @@ void CSketcherDoc::OnUpdateElementEllipse(CCmdUI *pCmdUI)
 	pCmdUI->SetCheck(m_Element==ELLIPSE);
 
 }
-
 
 void CSketcherDoc::OnPenstyleSolid()
 {
@@ -399,4 +380,25 @@ void CSketcherDoc::OnUpdatePenstyleDashDotDotted(CCmdUI *pCmdUI)
 	// Set menu item Checked if the current line style is dashdot
 	pCmdUI->SetCheck(m_PenStyle==PS_DASHDOTDOT);
 
+}
+
+CElement* CSketcherDoc::FindElement(const CPoint & point)const
+{
+	// Finds the element under the point
+	for(auto rIter = m_ElementList.rbegin() ; rIter != m_ElementList.rend() ; ++rIter)
+	{
+		if((*rIter)->GetBoundRect().PtInRect(point))
+		return *rIter;
+	}
+	return nullptr;
+}
+
+// Delete an element from the sketch
+void CSketcherDoc::DeleteElement(CElement* pElement)
+{
+	if(pElement)
+	{
+		m_ElementList.remove(pElement); // Remove the pointer from the list
+		delete pElement; // Delete the element from the heap
+	}
 }

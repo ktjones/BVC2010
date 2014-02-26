@@ -401,8 +401,7 @@ void CSketcherDoc::DeleteElement(CElement* pElement)
 		m_ElementList.remove(pElement); // Remove the pointer from the list
 		delete pElement; // Delete the element from the heap
 	}
-<<<<<<< HEAD
-=======
+
 }
 
 void CSketcherDoc::SendToBack(CElement* pElement)
@@ -414,5 +413,4 @@ void CSketcherDoc::SendToBack(CElement* pElement)
 		m_ElementList.push_front(pElement); // Put it back at the beginning of the list
 	}
 
->>>>>>> 21
 }

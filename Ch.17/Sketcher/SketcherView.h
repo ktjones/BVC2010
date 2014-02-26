@@ -73,10 +73,8 @@ public:
 	afx_msg void OnElementMove();
 	afx_msg void OnElementDelete();
 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
-<<<<<<< HEAD
-=======
 	afx_msg void OnElementSendtoback();
->>>>>>> 21
+
 };
 
 #ifndef _DEBUG  // debug version in SketcherView.cpp

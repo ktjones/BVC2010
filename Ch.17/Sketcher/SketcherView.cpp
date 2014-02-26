@@ -34,10 +34,7 @@ BEGIN_MESSAGE_MAP(CSketcherView, CScrollView)
 	ON_COMMAND(ID_ELEMENT_MOVE, &CSketcherView::OnElementMove)
 	ON_COMMAND(ID_ELEMENT_DELETE, &CSketcherView::OnElementDelete)
 	ON_WM_RBUTTONDOWN()
-<<<<<<< HEAD
-=======
 	ON_COMMAND(ID_ELEMENT_SENDTOBACK, &CSketcherView::OnElementSendtoback)
->>>>>>> 21
 END_MESSAGE_MAP()
 
 // CSketcherView construction/destruction
@@ -382,12 +379,9 @@ void CSketcherView::OnRButtonDown(UINT nFlags, CPoint point)
 		GetDocument()->UpdateAllViews(nullptr); // Redraw all the views
 	}
 }
-<<<<<<< HEAD
-=======
-
 
 void CSketcherView::OnElementSendtoback()
 {
 	GetDocument()->SendToBack(m_pSelected);	// Move element to start of list
 }
->>>>>>> 21
+

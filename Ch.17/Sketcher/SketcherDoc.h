@@ -25,7 +25,12 @@ class CSketcherDoc : public CDocument
 		std::list<CElement*>::const_iterator begin() const { return m_ElementList.begin(); } // Get list begin iterator
 		std::list<CElement*>::const_iterator end() const { return m_ElementList.end(); } // Get list end iterator
 		CElement* FindElement(const CPoint & point)const;		// Determine is object has been selected
+<<<<<<< HEAD
 		void DeleteElement(CElement* pElement); // Delete an element
+=======
+		void DeleteElement(CElement* pElement);		// Delete an element
+		void SendToBack(CElement* pElement);	// Send an element backwards in the list
+>>>>>>> 21
 
 	// Overrides
 	public:

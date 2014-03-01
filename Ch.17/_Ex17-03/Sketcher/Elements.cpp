@@ -212,18 +212,16 @@ CCurve::CCurve(void)
 {
 }
 
-CCurve::CCurve(CPoint* pfirst, CPoint* psecond, COLORREF aColor, int aPenStyle)
+CCurve::CCurve(const CPoint& first, const CPoint& second, COLORREF aColor, int aPenStyle)
 {
 
 	// Store the points
 	//m_Points.push_back(first);
 	//m_Points.push_back(second);
-	//m_lPoints.push_front(first);
-	//m_lPoints.push_front(second);
-	m_plPoints.push_front(pfirst);
-	m_plPoints.push_front(psecond);
+	m_APoints.Add(first);
+	m_APoints.Add(second);
 	m_Color = aColor;
-	m_EnclosingRect = CRect(min((*pfirst).x, (*psecond).x), min((*pfirst).y, (*psecond).y),max((*pfirst).x, (*psecond).x), max((*pfirst).y, (*psecond).y));
+	m_EnclosingRect = CRect(min(first.x, second.x), min(first.y, second.y),max(first.x, second.x), max(first.y, second.y));
 	m_PenWidth = 1;
 	m_LineStyle = aPenStyle;
 
@@ -231,11 +229,6 @@ CCurve::CCurve(CPoint* pfirst, CPoint* psecond, COLORREF aColor, int aPenStyle)
 
 CCurve::~CCurve(void)
 {
-	for(auto iter = m_plPoints.begin() ; iter != m_plPoints.end() ; ++iter)
-	{
-		delete *iter;
-	}
-
 }
 
 // Draw a curve
@@ -257,24 +250,17 @@ void CCurve::Draw(CDC* pDC, CElement* pElement)
 
 	// Now draw the curve
 	//pDC->MoveTo(m_Points[0]);
-	//pDC->MoveTo(*(m_lPoints.begin()));
-	pDC->MoveTo(**(m_plPoints.begin()));
+	pDC->MoveTo(m_APoints[0]);
 
 	/*
 	for(size_t i=1; i<m_Points.size(); ++i)
 	{
 		pDC->LineTo(m_Points[i]);
 	}
-		
-	for(auto i=m_lPoints.begin(); i!=m_lPoints.end(); ++i)
-	{
-		pDC->LineTo(*i);
-	}
 	*/
-
-	for(auto i=m_plPoints.begin(); i!=m_plPoints.end(); ++i)
+	for(int i=1; i<m_APoints.GetSize(); ++i)
 	{
-		pDC->LineTo(**i);
+		pDC->LineTo(m_APoints[i]);
 	}
 
 	pDC->SelectObject(pOldPen); // Restore the old pen
@@ -285,20 +271,22 @@ void CCurve::Move(const CSize & aSize)
 	m_EnclosingRect += aSize; // Move the rectangle
 	// Now move all the points
 	//std::for_each(m_Points.begin(), m_Points.end(),[& aSize](CPoint& p){p+=aSize;});
-	//std::for_each(m_lPoints.begin(), m_lPoints.end(),[& aSize](CPoint& p){p+=aSize;});
-	std::for_each(m_plPoints.begin(), m_plPoints.end(),[& aSize](CPoint* p){*p+=aSize;});
+	for(int i=0; i<m_APoints.GetSize(); ++i)
+	{
+
+		m_APoints[i] += aSize;
+	}
 }
 
 // Add a segment to the curve
-void CCurve::AddSegment(CPoint* ppoint)
+void CCurve::AddSegment(const CPoint& point)
 {
 	
 	//m_Points.push_back(point); // Add the point to the end
-	//m_lPoints.push_back(point); // Add the point to the end
-	m_plPoints.push_back(ppoint); // Add the point to the end
+	m_APoints.Add(point); // Add the point to the end
 
 	// Modify the enclosing rectangle for the new point
-	m_EnclosingRect=CRect(min((*ppoint).x,m_EnclosingRect.left),min((*ppoint).y,m_EnclosingRect.top),max((*ppoint).x,m_EnclosingRect.right),max((*ppoint).y,m_EnclosingRect.bottom));
+	m_EnclosingRect=CRect(min(point.x,m_EnclosingRect.left),min(point.y,m_EnclosingRect.top),max(point.x,m_EnclosingRect.right),max(point.y,m_EnclosingRect.bottom));
 
 }
 

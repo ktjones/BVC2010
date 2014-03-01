@@ -1,7 +1,6 @@
 #pragma once
 #include "atltypes.h"
 #include <vector>
-#include <list>
 
 // CElement command target
 
@@ -86,17 +85,13 @@ class CCurve : public CElement
 		virtual void Move(const CSize & aSize); // Function to move an element
 
 		// Constructor for a curve object
-		//CCurve(const CPoint& first, const CPoint& second, COLORREF aColor, int aPenStyle);
-		//void AddSegment(const CPoint& point); // Add a segment to the curve
-		CCurve(CPoint* pfirst, CPoint* psecond, COLORREF aColor, int aPenStyle);
-		void AddSegment(CPoint* ppoint); // Add a segment to the curve
-
+		CCurve(const CPoint& first, const CPoint& second, COLORREF aColor, int aPenStyle);
+		void AddSegment(const CPoint& point); // Add a segment to the curve
 
 	protected:
-			
-		//std::vector<CPoint> m_Points; // Points defining the curve using a vector
-		//std::list<CPoint> m_lPoints;  // Points defining the curve using a list 
-		std::list<CPoint*> m_plPoints;  // Points defining the curve using a list 
+		//std::vector<CPoint> m_Points; // Points defining the curve
+		CArray<CPoint, const CPoint &> m_APoints;		// Points defining the curve
+
 		CCurve(void);
 };
 

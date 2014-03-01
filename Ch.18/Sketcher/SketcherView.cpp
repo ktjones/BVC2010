@@ -223,7 +223,7 @@ void CSketcherView::OnMouseMove(UINT nFlags, CPoint point)
 		{
 			if(CURVE == GetDocument()->GetElementType()) // Is it a curve?
 			{ // We are drawing a curve so add a segment to the existing curve
-				static_cast<CCurve*>(m_pTempElement)->AddSegment(new CPoint(m_SecondPoint));
+				static_cast<CCurve*>(m_pTempElement)->AddSegment(m_SecondPoint);
 				m_pTempElement->Draw(&aDC); // Now draw it
 				return; // We are done
 			}
@@ -280,7 +280,7 @@ CElement* CSketcherView::CreateElement(void) const
 			return new CCircle(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle());
 
 		case CURVE:
-			return new CCurve(new CPoint(m_FirstPoint), new CPoint(m_SecondPoint), pDoc->GetElementColor(),pDoc->GetElementPenStyle());
+			return new CCurve(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle());
 
 		case LINE:
 			return new CLine(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle());

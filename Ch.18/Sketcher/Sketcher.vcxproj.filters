@@ -67,6 +67,9 @@
     <ClInclude Include="Elements.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PenDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sketcher.cpp">
@@ -88,6 +91,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Elements.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PenDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

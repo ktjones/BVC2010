@@ -27,7 +27,8 @@ CRect CElement::GetBoundRect() const
 	CRect boundingRect(m_EnclosingRect); // Object to store bounding rectangle
 	
 	// Increase the rectangle by the pen width and return it
-	boundingRect.InflateRect(m_PenWidth, m_PenWidth);
+	int Offset = m_PenWidth == 0 ? 1 : m_PenWidth; // Width must be at least 1
+	boundingRect.InflateRect(Offset, Offset);
 	
 	return boundingRect;
 	
@@ -41,10 +42,10 @@ CLine::CLine(void)
 }
 
 // CLine class constructor
-CLine::CLine(const CPoint & start, const CPoint & end, COLORREF aColor, int aPenStyle): m_StartPoint(start), m_EndPoint(end)
+CLine::CLine(const CPoint & start, const CPoint & end, COLORREF aColor, int aPenStyle, int penWidth) : m_StartPoint(start), m_EndPoint(end)
 {
 	
-	m_PenWidth = 1; // Set pen width
+	m_PenWidth = penWidth; // Set pen width
 	m_LineStyle = aPenStyle;
 	m_Color = aColor; // Set line color
 
@@ -96,12 +97,12 @@ CRectangle::CRectangle(void)
 }
 
 // CRectangle class constructor
-CRectangle::CRectangle(const CPoint & start, const CPoint & end, COLORREF aColor, int aPenStyle)
+CRectangle::CRectangle(const CPoint & start, const CPoint & end, COLORREF aColor, int aPenStyle, int penWidth)
 {
 	
 	m_Color = aColor; // Set rectangle color
 	m_LineStyle = aPenStyle;
-	m_PenWidth = 1; // Set pen width
+	m_PenWidth = penWidth; // Set pen width
 	
 	// Define the enclosing rectangle
 	m_EnclosingRect = CRect(start, end);
@@ -151,7 +152,7 @@ CCircle::CCircle(void)
 {
 }
 
-CCircle::CCircle(const CPoint& start, const CPoint& end, COLORREF aColor, int aPenStyle)
+CCircle::CCircle(const CPoint& start, const CPoint& end, COLORREF aColor, int aPenStyle, int penWidth)
 {
 	
 	// First calculate the radius
@@ -164,7 +165,7 @@ CCircle::CCircle(const CPoint& start, const CPoint& end, COLORREF aColor, int aP
 	m_EnclosingRect = CRect(start.x-radius, start.y-radius,start.x+radius, start.y+radius);
 	m_EnclosingRect.NormalizeRect(); // Normalize-in case it's not MM_TEXT
 	m_Color = aColor; // Set the color for the circle
-	m_PenWidth = 1; // Set pen width to 1
+	m_PenWidth = penWidth; // Set pen width
 	m_LineStyle = aPenStyle;
 
 }
@@ -212,7 +213,7 @@ CCurve::CCurve(void)
 {
 }
 
-CCurve::CCurve(const CPoint& first, const CPoint& second, COLORREF aColor, int aPenStyle)
+CCurve::CCurve(const CPoint& first, const CPoint& second, COLORREF aColor, int aPenStyle, int penWidth)
 {
 
 	// Store the points
@@ -220,7 +221,7 @@ CCurve::CCurve(const CPoint& first, const CPoint& second, COLORREF aColor, int a
 	m_Points. push_back(second);
 	m_Color = aColor;
 	m_EnclosingRect = CRect(min(first.x, second.x), min(first.y, second.y),max(first.x, second.x), max(first.y, second.y));
-	m_PenWidth = 1;
+	m_PenWidth = penWidth; // Set pen width
 	m_LineStyle = aPenStyle;
 
 }
@@ -281,7 +282,7 @@ CEllipse::CEllipse(void)
 {
 }
 
-CEllipse::CEllipse(const CPoint& center, const CPoint& end, COLORREF aColor, int aPenStyle)
+CEllipse::CEllipse(const CPoint& center, const CPoint& end, COLORREF aColor, int aPenStyle, int penWidth)
 {
 	
 	// First calculate the left rect coords (start)
@@ -298,7 +299,7 @@ CEllipse::CEllipse(const CPoint& center, const CPoint& end, COLORREF aColor, int
 	m_EnclosingRect = CRect(start,end);
 	m_EnclosingRect.NormalizeRect(); // Normalize-in case it's not MM_TEXT
 	m_Color = aColor; // Set the color for the circle
-	m_PenWidth = 1; // Set pen width to 1
+	m_PenWidth = penWidth; // Set pen width
 	m_LineStyle = aPenStyle;
 
 }

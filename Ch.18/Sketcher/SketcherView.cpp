@@ -274,19 +274,19 @@ CElement* CSketcherView::CreateElement(void) const
 	switch(pDoc->GetElementType())
 	{
 		case RECTANGLE:
-			return new CRectangle(m_FirstPoint, m_SecondPoint,pDoc->GetElementColor(),pDoc->GetElementPenStyle());
+			return new CRectangle(m_FirstPoint, m_SecondPoint,pDoc->GetElementColor(),pDoc->GetElementPenStyle(),pDoc->GetPenWidth());
 
 		case CIRCLE:
-			return new CCircle(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle());
+			return new CCircle(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle(),pDoc->GetPenWidth());
 
 		case CURVE:
-			return new CCurve(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle());
+			return new CCurve(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle(), pDoc->GetPenWidth());
 
 		case LINE:
-			return new CLine(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle());
+			return new CLine(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle(),pDoc->GetPenWidth());
 		
 		case ELLIPSE:
-			return new CEllipse(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle());
+			return new CEllipse(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle(),pDoc->GetPenWidth());
 
 		default:
 			// Something's gone wrong

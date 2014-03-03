@@ -35,7 +35,7 @@ class CLine : public CElement
 		virtual void Move(const CSize & aSize); // Function to move an element
 	
 		// Constructor for a line object
-		CLine(const CPoint& start, const CPoint& end, COLORREF aColor, int aPenStyle);
+		CLine(const CPoint& start, const CPoint& end, COLORREF aColor, int aPenStyle, int penWidth);
 
 
 	protected:
@@ -54,7 +54,7 @@ class CRectangle : public CElement
 		virtual void Move(const CSize & aSize); // Function to move an element
 
 		// Constructor for a rectangle object
-		CRectangle(const CPoint& start, const CPoint& end, COLORREF aColor, int aPenStyle);
+		CRectangle(const CPoint& start, const CPoint& end, COLORREF aColor, int aPenStyle, int penWidth);
 
 	protected:
 		CRectangle(void);	// Default constructor - should not be used
@@ -69,7 +69,7 @@ class CCircle : public CElement
 		virtual void Move(const CSize & aSize); // Function to move an element
 
 		// Constructor for a rectangle object
-		CCircle(const CPoint& start, const CPoint& end, COLORREF aColor, int aPenStyle);
+		CCircle(const CPoint& start, const CPoint& end, COLORREF aColor, int aPenStyle, int penWidth);
 
 	protected:
 		CCircle(void);
@@ -85,7 +85,7 @@ class CCurve : public CElement
 		virtual void Move(const CSize & aSize); // Function to move an element
 
 		// Constructor for a curve object
-		CCurve(const CPoint& first, const CPoint& second, COLORREF aColor, int aPenStyle);
+		CCurve(const CPoint& first, const CPoint& second, COLORREF aColor, int aPenStyle, int penWidth);
 		void AddSegment(const CPoint& point); // Add a segment to the curve
 
 	protected:
@@ -102,7 +102,7 @@ class CEllipse : public CElement
 		virtual void Move(const CSize & aSize); // Function to move an element
 
 		// Constructor for a rectangle object
-		CEllipse(const CPoint& center, const CPoint& end, COLORREF aColor, int aPenStyle);
+		CEllipse(const CPoint& center, const CPoint& end, COLORREF aColor, int aPenStyle, int penWidth);
 
 	protected:
 		CEllipse(void);	// Default constructor - should not be used

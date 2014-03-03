@@ -27,6 +27,7 @@ class CSketcherDoc : public CDocument
 		CElement* FindElement(const CPoint & point)const;		// Determine is object has been selected
 		void DeleteElement(CElement* pElement); // Delete an element
 		void SendToBack(CElement* pElement);	// Send an element backwards in the list
+		int GetPenWidth() const { return m_PenWidth; }	// Get the current pen width
 
 	// Overrides
 	public:
@@ -73,6 +74,7 @@ class CSketcherDoc : public CDocument
 		int m_PenStyle;
 		// Container to keep track of elements
 		std::list<CElement*> m_ElementList; // List of elements in the sketch
+		int m_PenWidth; // Current pen width
 
 	public:
 		afx_msg void OnUpdateColorBlack(CCmdUI *pCmdUI);
@@ -95,4 +97,5 @@ class CSketcherDoc : public CDocument
 		afx_msg void OnUpdatePenstyleDotted(CCmdUI *pCmdUI);
 		afx_msg void OnUpdatePenstyleDashDotted(CCmdUI *pCmdUI);
 		afx_msg void OnUpdatePenstyleDashDotDotted(CCmdUI *pCmdUI);
+		afx_msg void OnPenWidth();
 };

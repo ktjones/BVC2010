@@ -10,6 +10,7 @@
 #endif
 
 #include "SketcherDoc.h"
+#include "PenDialog.h"
 
 #include <propkey.h>
 
@@ -50,6 +51,7 @@ BEGIN_MESSAGE_MAP(CSketcherDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_PENSTYLE_DOTTED, &CSketcherDoc::OnUpdatePenstyleDotted)
 	ON_UPDATE_COMMAND_UI(ID_PENSTYLE_DASH_DOTTED, &CSketcherDoc::OnUpdatePenstyleDashDotted)
 	ON_UPDATE_COMMAND_UI(ID_PENSTYLE_DASH_DOT_DOTTED, &CSketcherDoc::OnUpdatePenstyleDashDotDotted)
+	ON_COMMAND(ID_PEN_WIDTH, &CSketcherDoc::OnPenWidth)
 END_MESSAGE_MAP()
 
 
@@ -413,4 +415,20 @@ void CSketcherDoc::SendToBack(CElement* pElement)
 		m_ElementList.push_front(pElement); // Put it back at the beginning of the list
 	}
 
+}
+
+void CSketcherDoc::OnPenWidth()
+{
+	CPenDialog aDlg; // Create a local dialog object
+	// Display the dialog as modal
+	aDlg.DoModal();
+
+	// Set the pen width in the dialog to that stored in the document
+	aDlg.m_PenWidth = m_PenWidth;
+	// Display the dialog as modal
+	// When closed with OK, get the pen width
+	if(aDlg.DoModal() == IDOK)
+	{
+		m_PenWidth = aDlg.m_PenWidth;
+	}
 }

@@ -417,12 +417,10 @@ void CSketcherDoc::SendToBack(CElement* pElement)
 
 }
 
+// Handler for the pen width menu item
 void CSketcherDoc::OnPenWidth()
 {
 	CPenDialog aDlg; // Create a local dialog object
-	// Display the dialog as modal
-	aDlg.DoModal();
-
 	// Set the pen width in the dialog to that stored in the document
 	aDlg.m_PenWidth = m_PenWidth;
 	// Display the dialog as modal

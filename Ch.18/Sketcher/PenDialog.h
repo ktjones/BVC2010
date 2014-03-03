@@ -8,13 +8,13 @@ class CPenDialog : public CDialog
 	DECLARE_DYNAMIC(CPenDialog)
 
 public:
-	CPenDialog(CWnd* pParent = NULL);   // standard constructor
+	CPenDialog(CWnd* pParent = nullptr);   // standard constructor
 	virtual ~CPenDialog();
-
-	int m_PenWidth; // Record the current pen width
 
 // Dialog Data
 	enum { IDD = IDD_PENWIDTH_DLG };
+
+	int m_PenWidth;						// Record the current pen width
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support

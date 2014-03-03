@@ -280,7 +280,7 @@ CElement* CSketcherView::CreateElement(void) const
 			return new CCircle(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle(),pDoc->GetPenWidth());
 
 		case CURVE:
-			return new CCurve(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle(), pDoc->GetPenWidth());
+			return new CCurve(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle(),pDoc->GetPenWidth());
 
 		case LINE:
 			return new CLine(m_FirstPoint, m_SecondPoint, pDoc->GetElementColor(),pDoc->GetElementPenStyle(),pDoc->GetPenWidth());

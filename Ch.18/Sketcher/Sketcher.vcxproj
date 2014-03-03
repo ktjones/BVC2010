@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{870A1EDF-754C-4FE8-8B01-211E9BDE147A}</ProjectGuid>
+    <ProjectGuid>{2DC882F6-4E26-4A3A-B8D4-87C95FF07EDF}</ProjectGuid>
     <RootNamespace>Sketcher</RootNamespace>
     <Keyword>MFCProj</Keyword>
   </PropertyGroup>

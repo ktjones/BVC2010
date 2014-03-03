@@ -74,7 +74,7 @@ class CSketcherDoc : public CDocument
 		int m_PenStyle;
 		// Container to keep track of elements
 		std::list<CElement*> m_ElementList; // List of elements in the sketch
-		int m_PenWidth; // Current pen width
+		int m_PenWidth;		// Current pen width
 
 	public:
 		afx_msg void OnUpdateColorBlack(CCmdUI *pCmdUI);

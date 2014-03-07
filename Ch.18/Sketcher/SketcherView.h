@@ -64,6 +64,7 @@ class CSketcherView : public CScrollView
 		bool m_MoveMode;	// Move element flag
 		CPoint m_CursorPos;	// Cursor position
 		CPoint m_FirstPos;	// Original position in a move
+		int m_Scale;		// Current view scale
 
 		virtual void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
 		void MoveElement(CClientDC & aDC, const CPoint & point); // Move an element
@@ -75,6 +76,9 @@ public:
 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnElementSendtoback();
 
+	afx_msg void OnViewScale();
+	virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo = NULL);
+	void ResetScrollSizes(void);
 };
 
 #ifndef _DEBUG  // debug version in SketcherView.cpp

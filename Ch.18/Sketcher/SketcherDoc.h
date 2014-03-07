@@ -28,6 +28,7 @@ class CSketcherDoc : public CDocument
 		void DeleteElement(CElement* pElement); // Delete an element
 		void SendToBack(CElement* pElement);	// Send an element backwards in the list
 		int GetPenWidth() const { return m_PenWidth; }	// Get the current pen width
+		CSize GetDocSize() const { return m_DocSize; }  // Retrieve the document size
 
 	// Overrides
 	public:
@@ -75,6 +76,7 @@ class CSketcherDoc : public CDocument
 		// Container to keep track of elements
 		std::list<CElement*> m_ElementList; // List of elements in the sketch
 		int m_PenWidth;		// Current pen width
+		CSize m_DocSize; // Document size
 
 	public:
 		afx_msg void OnUpdateColorBlack(CCmdUI *pCmdUI);

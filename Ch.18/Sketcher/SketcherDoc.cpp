@@ -57,7 +57,7 @@ END_MESSAGE_MAP()
 
 // CSketcherDoc construction/destruction
 
-CSketcherDoc::CSketcherDoc() : m_Element(LINE), m_Color(BLACK), m_PenStyle(PS_SOLID)
+CSketcherDoc::CSketcherDoc() : m_Element(LINE), m_Color(BLACK), m_PenStyle(PS_SOLID), m_DocSize(CSize(3000,3000))
 {
 	// TODO: add one-time construction code here
 

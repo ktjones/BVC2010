@@ -11,6 +11,7 @@
 
 #include "SketcherDoc.h"
 #include "SketcherView.h"
+#include "ScaleDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -35,13 +36,15 @@ BEGIN_MESSAGE_MAP(CSketcherView, CScrollView)
 	ON_COMMAND(ID_ELEMENT_DELETE, &CSketcherView::OnElementDelete)
 	ON_WM_RBUTTONDOWN()
 	ON_COMMAND(ID_ELEMENT_SENDTOBACK, &CSketcherView::OnElementSendtoback)
+	ON_COMMAND(ID_VIEW_SCALE, &CSketcherView::OnViewScale)
 END_MESSAGE_MAP()
 
 // CSketcherView construction/destruction
 
-CSketcherView::CSketcherView(): m_FirstPoint(CPoint(0,0)), m_SecondPoint(CPoint(0,0)), m_pTempElement(nullptr), m_pSelected(nullptr), m_MoveMode(false), m_CursorPos(CPoint(0,0)), m_FirstPos(CPoint(0,0))
+CSketcherView::CSketcherView(): m_FirstPoint(CPoint(0,0)), m_SecondPoint(CPoint(0,0)), m_pTempElement(nullptr), m_pSelected(nullptr), m_MoveMode(false), m_CursorPos(CPoint(0,0)), m_FirstPos(CPoint(0,0)), m_Scale(1)
 {
-	// TODO: add construction code here
+	
+	SetScrollSizes(MM_TEXT, CSize(0,0)); // Set arbitrary scrollers
 
 }
 
@@ -320,13 +323,9 @@ void CSketcherView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 
 void CSketcherView::OnInitialUpdate()
 {
+	
+	ResetScrollSizes(); // Set up the scrollbars
 	CScrollView::OnInitialUpdate();
-
-	// Define document size
-	CSize DocSize(3000,3000);
-
-	// Set mapping mode and document size
-	SetScrollSizes(MM_LOENGLISH, DocSize);
 
 }
 
@@ -385,3 +384,50 @@ void CSketcherView::OnElementSendtoback()
 	GetDocument()->SendToBack(m_pSelected);	// Move element to start of list
 }
 
+void CSketcherView::OnViewScale()
+{
+	
+	CScaleDialog aDlg; // Create a dialog object
+	aDlg.m_Scale = m_Scale; // Pass the view scale to the dialog
+	if(aDlg.DoModal() == IDOK)
+	{
+		m_Scale = aDlg.m_Scale; // Get the new scale
+		ResetScrollSizes(); // Adjust scrolling to the new scale
+		InvalidateRect(0); // Invalidate the whole window
+	}
+	
+}
+
+void CSketcherView::OnPrepareDC(CDC* pDC, CPrintInfo* pInfo)
+{
+	
+	CScrollView::OnPrepareDC(pDC, pInfo);
+	CSketcherDoc* pDoc = GetDocument();
+	pDC->SetMapMode(MM_ANISOTROPIC); // Set the map mode
+	CSize DocSize = pDoc->GetDocSize(); // Get the document size
+	
+	pDC->SetWindowExt(DocSize); // Now set the window extent
+	
+	// Get the number of pixels per inch in x and y
+	int xLogPixels = pDC->GetDeviceCaps(LOGPIXELSX);
+	int yLogPixels = pDC->GetDeviceCaps(LOGPIXELSY);
+	
+	// Calculate the viewport extent in x and y
+	int xExtent = (DocSize.cx*m_Scale*xLogPixels)/100;
+	int yExtent = (DocSize.cy*m_Scale*yLogPixels)/100;
+	
+	pDC->SetViewportExt(xExtent,yExtent); // Set viewport extent
+
+}
+
+
+void CSketcherView::ResetScrollSizes(void)
+{
+
+	CClientDC aDC(this);
+	OnPrepareDC(&aDC); // Set up the device context
+	CSize DocSize = GetDocument()->GetDocSize(); // Get the document size
+	aDC.LPtoDP(&DocSize); // Get the size in pixels
+	SetScrollSizes(MM_TEXT, DocSize); // Set up the scrollbars
+
+}

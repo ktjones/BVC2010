@@ -16,6 +16,7 @@
 IMPLEMENT_DYNCREATE(CChildFrame, CMDIChildWndEx)
 
 BEGIN_MESSAGE_MAP(CChildFrame, CMDIChildWndEx)
+	ON_WM_CREATE()
 END_MESSAGE_MAP()
 
 // CChildFrame construction/destruction
@@ -54,3 +55,18 @@ void CChildFrame::Dump(CDumpContext& dc) const
 #endif //_DEBUG
 
 // CChildFrame message handlers
+
+
+int CChildFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CMDIChildWndEx::OnCreate(lpCreateStruct) == -1)
+		return -1;
+
+	// Create the status bar
+	m_StatusBar.Create(this);
+	static UINT indicators[] = {ID_INDICATOR_SCALE};
+	m_StatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
+	m_StatusBar.SetPaneStyle(0, SBPS_STRETCH); // Stretch the first pane
+
+	return 0;
+}

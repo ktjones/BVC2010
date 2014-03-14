@@ -12,7 +12,7 @@ public:
 
 // Attributes
 public:
-
+	CMFCStatusBar m_StatusBar; // Status bar object
 // Operations
 public:
 
@@ -30,4 +30,6 @@ public:
 // Generated message map functions
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 };

@@ -484,3 +484,13 @@ void CSketcherDoc::OnUpdateElementText(CCmdUI *pCmdUI)
 	// Set checked if the current element is text
 	pCmdUI->SetCheck(m_Element == TEXT);
 }
+
+// Get the rectangle enclosing the entire document
+CRect CSketcherDoc::GetDocExtent()
+{
+	CRect docExtent(0,0,1,1); // Initial document extent
+	for(auto iter = m_ElementList.begin() ; iter != m_ElementList.end() ; ++iter)
+	docExtent.UnionRect(docExtent, (*iter)-> GetBoundRect());
+	docExtent.NormalizeRect();
+	return docExtent;
+}

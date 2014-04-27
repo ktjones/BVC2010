@@ -76,6 +76,9 @@
     <ClInclude Include="TextDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PrintData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sketcher.cpp">

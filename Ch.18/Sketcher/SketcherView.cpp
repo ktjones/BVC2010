@@ -12,6 +12,8 @@
 #include "SketcherDoc.h"
 #include "SketcherView.h"
 #include "ScaleDialog.h"
+#include "TextDialog.h"
+#include <typeinfo>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -37,6 +39,7 @@ BEGIN_MESSAGE_MAP(CSketcherView, CScrollView)
 	ON_WM_RBUTTONDOWN()
 	ON_COMMAND(ID_ELEMENT_SENDTOBACK, &CSketcherView::OnElementSendtoback)
 	ON_COMMAND(ID_VIEW_SCALE, &CSketcherView::OnViewScale)
+	ON_UPDATE_COMMAND_UI(ID_INDICATOR_SCALE, &CSketcherView::OnUpdateScale)
 END_MESSAGE_MAP()
 
 // CSketcherView construction/destruction
@@ -198,6 +201,26 @@ void CSketcherView::OnLButtonDown(UINT nFlags, CPoint point)
 		return;
 	}
 	
+	CSketcherDoc* pDoc = GetDocument();// Get a document pointer
+	if(pDoc->GetElementType() == TEXT)
+	{
+		CTextDialog aDlg;
+		if(aDlg.DoModal() == IDOK)
+		{
+			// Exit OK so create a text element
+			CSize textExtent = aDC.GetTextExtent(aDlg.m_TextString);
+			CRect rect(point, textExtent); //Create enclosing rectangle
+			CText* pTextElement = new CText(
+			aDlg.m_TextString, rect, pDoc->GetElementColor());
+			// Add the element to the document
+			pDoc->AddElement(pTextElement);
+			// Get all views updated
+			pDoc->UpdateAllViews(nullptr, 0, pTextElement);
+		}
+		return;
+	}
+
+
 	m_FirstPoint = point; // Record the cursor position
 	SetCapture(); // Capture subsequent mouse messages
 
@@ -354,11 +377,23 @@ void CSketcherView::OnElementDelete()
 void CSketcherView::MoveElement(CClientDC & aDC, const CPoint & point)
 {
 	CSize distance = point - m_CursorPos; // Get move distance
-	m_CursorPos = point; // Set current point as 1st for
-	// next time
+	m_CursorPos = point; // Set current point as 1st for next time
+	
 	// If there is an element selected, move it
 	if(m_pSelected)
 	{
+		if (typeid(*m_pSelected) == typeid(CText))
+		{
+			CRect oldRect=m_pSelected->GetBoundRect(); // Get old bound rect
+			aDC.LPtoDP(oldRect); // Convert to client coords
+			m_pSelected->Move(distance); // Move the element
+			InvalidateRect(&oldRect); // Invalidate combined area
+			UpdateWindow(); // Redraw immediately
+			m_pSelected->Draw(&aDC,m_pSelected); // Draw highlighted
+			return;
+		}
+		// ...otherwise, use this method
+				
 		aDC.SetROP2(R2_NOTXORPEN);
 		m_pSelected-> Draw(&aDC, m_pSelected); // Draw the element to erase it
 		m_pSelected-> Move(distance); // Now move the element
@@ -388,10 +423,10 @@ void CSketcherView::OnViewScale()
 {
 	
 	CScaleDialog aDlg; // Create a dialog object
-	aDlg.m_Scale = m_Scale; // Pass the view scale to the dialog
+	aDlg.m_Scale = m_Scale - 1; // Pass the view scale to the dialog
 	if(aDlg.DoModal() == IDOK)
 	{
-		m_Scale = aDlg.m_Scale; // Get the new scale
+		m_Scale = 1 + aDlg.m_Scale; // Get the new scale
 		ResetScrollSizes(); // Adjust scrolling to the new scale
 		InvalidateRect(0); // Invalidate the whole window
 	}
@@ -430,4 +465,13 @@ void CSketcherView::ResetScrollSizes(void)
 	aDC.LPtoDP(&DocSize); // Get the size in pixels
 	SetScrollSizes(MM_TEXT, DocSize); // Set up the scrollbars
 
+}
+
+
+void CSketcherView::OnUpdateScale(CCmdUI *pCmdUI)
+{
+	pCmdUI->Enable();
+	CString scaleStr;
+	scaleStr.Format(_T("View Scale : %d"), m_Scale);
+	pCmdUI->SetText(scaleStr);
 }
